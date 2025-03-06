@@ -47,10 +47,11 @@ public class FullGameManager : NetworkBehaviour
 
     public enum GAME_STATES
     {
-        InitialScene = 0,
-        LobbyScene = 1,
-        PlayerSelection = 2,
-        MainScene = 3
+        Initial = 0,
+        Lobby = 1,
+        Player = 2,
+        Main = 3,
+        End = 4
     }
 
 
@@ -68,7 +69,7 @@ public class FullGameManager : NetworkBehaviour
 
         DontDestroyOnLoad(gameObject);
 
-        gameState = GAME_STATES.LobbyScene;
+        gameState = GAME_STATES.Lobby;
 
         playerDataList = new NetworkList<PlayerData>();
     }
@@ -130,14 +131,14 @@ public class FullGameManager : NetworkBehaviour
             {
                 NetworkManager.Singleton.SceneManager.OnLoadComplete += GameSceneLoaded;
 
-                NetworkManager.Singleton.SceneManager.LoadScene(GAME_STATES.MainScene.ToString(), LoadSceneMode.Single);
+                NetworkManager.Singleton.SceneManager.LoadScene(GAME_STATES.Main.ToString(), LoadSceneMode.Single);
             }
         }
     }
 
     private void GameSceneLoaded(ulong clientId, string sceneName, LoadSceneMode loadSceneMode)
     {
-        gameState = GAME_STATES.MainScene;
+        gameState = GAME_STATES.Main;
 
         foreach (PlayerData playerData in playerDataList)
         {
