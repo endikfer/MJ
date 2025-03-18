@@ -8,12 +8,6 @@ using UnityEngine.Events;
 
 public class MyNetworkManager : MonoBehaviour
 {
-
-    //    public void StartServer()
-    //    {
-    //        NetworkManager.Singleton.StartServer();
-    //    }
-
     private const int MAX_PLAYER_AMOUNT = 2;
     public UnityEvent OnFailedToJoin = new UnityEvent();
 
@@ -21,14 +15,14 @@ public class MyNetworkManager : MonoBehaviour
     {
         NetworkManager.Singleton.ConnectionApprovalCallback += ConnectionApprovalCallback;
         NetworkManager.Singleton.StartHost();
-        //FullGameManager.Instance.gameStates = FullGameManager.GAME_STATES.PlayerSelectionScene;
-        //NetworkManager.Singleton.SceneManager.LoadScene(FullGameManager.Instance.gameStates.ToString(), LoadSceneMode.Single);
+        FullGameManager.Instance.gameState = FullGameManager.GAME_STATES.Player;
+        NetworkManager.Singleton.SceneManager.LoadScene(FullGameManager.Instance.gameState.ToString(), LoadSceneMode.Single);
     }
 
     private void ConnectionApprovalCallback(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
     {
-        //if (SceneManager.GetActiveScene().name == FullGameManager.GAME_STATES.MainScene.ToString() || NetworkManager.Singleton.ConnectedClientsIds.Count >= MAX_PLAYER_AMOUNT) response.Approved = false;
-        //else response.Approved = true;
+        if (SceneManager.GetActiveScene().name == FullGameManager.GAME_STATES.Main.ToString() || NetworkManager.Singleton.ConnectedClientsIds.Count >= MAX_PLAYER_AMOUNT) response.Approved = false;
+        else response.Approved = true;
     }
 
     public void StartClient()
@@ -44,7 +38,7 @@ public class MyNetworkManager : MonoBehaviour
 
     public void GoBack()
     {
-        //FullGameManager.Instance.gameStates = FullGameManager.GAME_STATES.InitialScene;
-        //SceneManager.LoadScene(FullGameManager.Instance.gameStates.ToString());
+        FullGameManager.Instance.gameState = FullGameManager.GAME_STATES.Initial;
+        SceneManager.LoadScene(FullGameManager.Instance.gameState.ToString());
     }
 }
