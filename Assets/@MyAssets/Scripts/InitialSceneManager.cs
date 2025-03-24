@@ -19,7 +19,7 @@ public class InitialSceneManager : MonoBehaviour
     }
     public void StartGame()
     {
-        SceneManager.LoadScene("Lobby");
+        SceneManager.LoadScene(1);
     }
 
     public void Quit()

@@ -54,15 +54,12 @@ public class FullGameManager : NetworkBehaviour
         End = 4
     }
 
-
     public GAME_STATES gameState;
 
     public NetworkList<PlayerData> playerDataList;
 
     public static FullGameManager Instance { get; private set; }
 
-
-    // Start is called before the first frame update
     private void Awake()
     {
         Instance = this;

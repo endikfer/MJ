@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.SceneManagement;
-using System;
 using UnityEngine.Events;
 
 public class MyNetworkManager : MonoBehaviour
@@ -13,10 +12,10 @@ public class MyNetworkManager : MonoBehaviour
 
     public void StartHost()
     {
-        NetworkManager.Singleton.ConnectionApprovalCallback += ConnectionApprovalCallback;
-        NetworkManager.Singleton.StartHost();
+        NetworkManager.Singleton.StartHost();       
         FullGameManager.Instance.gameState = FullGameManager.GAME_STATES.Player;
         NetworkManager.Singleton.SceneManager.LoadScene(FullGameManager.Instance.gameState.ToString(), LoadSceneMode.Single);
+        NetworkManager.Singleton.ConnectionApprovalCallback += ConnectionApprovalCallback;
     }
 
     private void ConnectionApprovalCallback(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
