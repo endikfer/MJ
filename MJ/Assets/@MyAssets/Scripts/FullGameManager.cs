@@ -137,11 +137,14 @@ public class FullGameManager : NetworkBehaviour
     {
         gameState = GAME_STATES.Main;
 
-        foreach (PlayerData playerData in playerDataList)
+        if (NetworkManager.Singleton.IsHost)  // Solo el host instanciará los jugadores
         {
-            GameObject playerGo = Instantiate(playerPrefabs[playerData.playerType]);
-
-            playerGo.GetComponent<NetworkObject>().SpawnAsPlayerObject(playerData.clientId, true);
+            foreach (PlayerData playerData in playerDataList)
+            {
+                // Instancia el personaje correspondiente para cada cliente
+                GameObject playerGo = Instantiate(playerPrefabs[playerData.playerType]);
+                playerGo.GetComponent<NetworkObject>().SpawnAsPlayerObject(playerData.clientId, true);
+            }
         }
     }
 }
