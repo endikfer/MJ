@@ -135,16 +135,16 @@ public class FullGameManager : NetworkBehaviour
 
     private void GameSceneLoaded(ulong clientId, string sceneName, LoadSceneMode loadSceneMode)
     {
+        if (clientId != NetworkManager.ServerClientId) return; // Asegúrate de que solo el servidor ejecuta esta lógica
+
         gameState = GAME_STATES.Main;
 
-        if (NetworkManager.Singleton.IsHost)  // Solo el host instanciará los jugadores
+        foreach (PlayerData playerData in playerDataList)
         {
-            foreach (PlayerData playerData in playerDataList)
-            {
-                // Instancia el personaje correspondiente para cada cliente
-                GameObject playerGo = Instantiate(playerPrefabs[playerData.playerType]);
-                playerGo.GetComponent<NetworkObject>().SpawnAsPlayerObject(playerData.clientId, true);
-            }
+            // Instancia el personaje correspondiente para cada cliente
+            GameObject playerGo = Instantiate(playerPrefabs[playerData.playerType]);
+            playerGo.GetComponent<NetworkObject>().SpawnAsPlayerObject(playerData.clientId, true);
         }
     }
+
 }
