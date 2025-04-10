@@ -11,9 +11,9 @@ public class NetworkPlayer : NetworkBehaviour
     public Transform rightHand;
     public Transform leftHand;
 
-    public Renderer[] meshToDisable;
+    //public Renderer[] meshToDisable;
 
-    public override void OnNetworkSpawn()
+    /*public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         if (IsOwner)
@@ -23,7 +23,7 @@ public class NetworkPlayer : NetworkBehaviour
                 item.enabled = false;
             }
         }
-    }
+    }*/
 
 
 
