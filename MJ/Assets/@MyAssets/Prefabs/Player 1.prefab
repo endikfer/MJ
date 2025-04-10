@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3737716028
+  GlobalObjectIdHash: 1926686491
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -1143,6 +1143,7 @@ GameObject:
   - component: {fileID: 3471711966681301022}
   - component: {fileID: 1914727075946092295}
   - component: {fileID: 4838426153011071079}
+  - component: {fileID: 4113934655580093855}
   m_Layer: 0
   m_Name: XR Origin (XR Rig)
   m_TagString: Untagged
@@ -1238,6 +1239,22 @@ MonoBehaviour:
   m_LocomotionProvider: {fileID: 0}
   m_MinHeight: 0
   m_MaxHeight: Infinity
+--- !u!114 &4113934655580093855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5687620580021801080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca7c8638abbe6cd429ada6400486260e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  root: {fileID: 2573350439431571335}
+  head: {fileID: 7515131077907497823}
+  rightHand: {fileID: 1805557729641267060}
+  leftHand: {fileID: 294151634557136249}
 --- !u!1 &6278733139779525420
 GameObject:
   m_ObjectHideFlags: 0
