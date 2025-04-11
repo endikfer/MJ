@@ -195,7 +195,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.5
   m_Height: 2
@@ -251,7 +251,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1689367524
+  GlobalObjectIdHash: 2746866054
   InScenePlacedSourceGlobalObjectIdHash: 2838299485
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -276,7 +276,6 @@ MonoBehaviour:
   head: {fileID: 2613279884274186465}
   rightHand: {fileID: 7606318419061718701}
   leftHand: {fileID: 1396594840750959884}
-  meshToDisable: []
 --- !u!114 &6713815810462552632
 MonoBehaviour:
   m_ObjectHideFlags: 0

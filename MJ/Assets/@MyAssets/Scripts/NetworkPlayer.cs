@@ -30,8 +30,10 @@ public class NetworkPlayer : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("Actualizando");
         if (IsOwner)
         {
+            Debug.Log("Soy owner, por lo que me voy a mocer a " + VrRigReferences.Singleton.root.position);
             root.position = VrRigReferences.Singleton.root.position;
             root.rotation = VrRigReferences.Singleton.root.rotation;
 
