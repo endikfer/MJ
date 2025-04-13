@@ -202,6 +202,8 @@ GameObject:
   - component: {fileID: 5932616856999346269}
   - component: {fileID: 4808702368760804680}
   - component: {fileID: 6713815810462552632}
+  - component: {fileID: -8104628027428363021}
+  - component: {fileID: -2375965019883794078}
   m_Layer: 0
   m_Name: NetworkPlayer2
   m_TagString: Untagged
@@ -296,6 +298,41 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!95 &-8104628027428363021
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6650292811616477708}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 28ab55ce5329f204cbc045e8aac611c1, type: 3}
+  m_Controller: {fileID: 9100000, guid: c054adcd167f2ab499e03bf461f54c7a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-2375965019883794078
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6650292811616477708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e79be6f74e2096448b013c9a9b728f10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xrCharacterController: {fileID: 0}
+  isDead: 0
 --- !u!1 &8803206943440241050
 GameObject:
   m_ObjectHideFlags: 0
