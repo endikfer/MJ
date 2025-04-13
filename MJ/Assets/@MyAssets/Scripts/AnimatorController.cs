@@ -12,12 +12,6 @@ public class AnimatorController : NetworkBehaviour
 
     public bool isDead = false;
 
-    // Añadimos NetworkVariables para sincronizar la animación
-    public NetworkVariable<float> horizontalVelocity = new NetworkVariable<float>(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    public NetworkVariable<float> verticalVelocity = new NetworkVariable<float>(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    public NetworkVariable<float> speed = new NetworkVariable<float>(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    public NetworkVariable<bool> isDeadNetwork = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-
     public override void OnNetworkSpawn()
     {
         if (!IsOwner) return; // solo controla su propio avatar
@@ -37,23 +31,46 @@ public class AnimatorController : NetworkBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!IsOwner || xrCharacterController == null || animator == null)
             return;
 
-        // Si el personaje está muerto, cambiamos el estado de muerte
-        if (isDeadNetwork.Value)
+        if (isDead)
         {
             animator.SetBool("IsDead", true);
             return;
         }
 
-        // Usamos los valores sincronizados de las NetworkVariables
-        animator.SetFloat("Horizontal", horizontalVelocity.Value);
-        animator.SetFloat("Vertical", verticalVelocity.Value);
-        animator.SetFloat("speed", speed.Value);
+        // Velocidad local respecto al avatar
+        Vector3 localVelocity = transform.InverseTransformDirection(xrCharacterController.velocity);
+        float horizontal = localVelocity.x;
+        float vertical = localVelocity.z;
+
+        Debug.Log("Horizontal Velocity: " + horizontal);
+        Debug.Log("Vertical Velocity: " + vertical);
+
+        if (Mathf.Abs(horizontal) < 0.1f && Mathf.Abs(vertical) < 0.1f)
+        {
+            horizontal = 0f;
+            vertical = 0f;
+        }
+
+        float currentSpeed = new Vector2(horizontal, vertical).magnitude;
+
+        animator.SetFloat("Horizontal", horizontal);
+        animator.SetFloat("Vertical", vertical);
+        animator.SetFloat("speed", currentSpeed);
+
+
+        if (currentSpeed < 0.1f) // Si la velocidad es suficientemente baja
+        {
+            animator.SetBool("IsWalking", false);  // Detiene la animación de caminar
+        }
+        else
+        {
+            animator.SetBool("IsWalking", true);   // Inicia la animación de caminar
+        }
     }
 
     public void Die()
