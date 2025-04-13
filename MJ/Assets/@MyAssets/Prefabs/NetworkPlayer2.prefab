@@ -242,7 +242,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2746866054
+  GlobalObjectIdHash: 2838299485
   InScenePlacedSourceGlobalObjectIdHash: 2838299485
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -307,7 +307,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6650292811616477708}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 28ab55ce5329f204cbc045e8aac611c1, type: 3}
+  m_Avatar: {fileID: 9000000, guid: d0e287593f91f3e4f87cb98b854a5c92, type: 3}
   m_Controller: {fileID: 9100000, guid: c054adcd167f2ab499e03bf461f54c7a, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
@@ -331,7 +331,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e79be6f74e2096448b013c9a9b728f10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xrCharacterController: {fileID: 0}
+  xrOriginName: XR Origin (XR Rig)
   isDead: 0
 --- !u!1 &8803206943440241050
 GameObject:

@@ -470,7 +470,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e79be6f74e2096448b013c9a9b728f10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xrCharacterController: {fileID: 0}
+  xrOriginName: XR Origin (XR Rig)
   isDead: 0
 --- !u!1 &8803206943440241050
 GameObject:
