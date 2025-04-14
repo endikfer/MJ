@@ -35,13 +35,13 @@ public class SpawnBulletManagerVR : NetworkBehaviour
     {
         if (!IsOwner) return;
 
-        if (rightTriggerAction != null && rightTriggerAction.WasPressedThisFrame())
+        bool triggerPressed = rightTriggerAction != null && rightTriggerAction.WasPressedThisFrame();
+        bool HPressed = Input.GetKeyDown(KeyCode.H);
+
+        if ((triggerPressed || HPressed) && Time.time - lastShootTime >= cooldown)
         {
-            if (Time.time - lastShootTime >= cooldown)
-            {
-                lastShootTime = Time.time;
-                SpawnBulletServerRpc(firePoint.position, firePoint.forward);
-            }
+            lastShootTime = Time.time;
+            SpawnBulletServerRpc(firePoint.position, firePoint.forward);
         }
 
         if (Input.GetKeyDown(KeyCode.L))
@@ -53,6 +53,7 @@ public class SpawnBulletManagerVR : NetworkBehaviour
     [Rpc(SendTo.Server)]
     private void SpawnBulletServerRpc(Vector3 position, Vector3 direction)
     {
+        Debug.Log($"[Server] Spawning bullet at {position}");
         var bulletObject = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, position, Quaternion.LookRotation(direction));
         bulletObject.Spawn();
 
