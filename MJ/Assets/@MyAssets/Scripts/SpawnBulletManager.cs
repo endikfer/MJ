@@ -1,71 +1,81 @@
-using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class SpawnBulletManager : NetworkBehaviour
+public class SpawnBulletManagerVR : NetworkBehaviour
 {
-    [SerializeField] private GameObject spawnedObjectPrefab;
+    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private float bulletForce = 10f;
+    [SerializeField] private Transform firePoint;
+
     [SerializeField] private InputActionAsset inputActions;
 
-    private GameObject spawnedObject;
-    private List<NetworkObject> bulletList;
     private InputAction rightTriggerAction;
+    private List<NetworkObject> bulletList;
+    private float cooldown = 0.25f;
+    private float lastShootTime;
 
     public override void OnNetworkSpawn()
     {
         bulletList = new List<NetworkObject>();
-        base.OnNetworkSpawn();
 
-        var vrMap = inputActions.FindActionMap("VRControls", true);
+        var vrMap = inputActions.FindActionMap("XRControls", true);
         rightTriggerAction = vrMap.FindAction("RightTrigger", true);
         rightTriggerAction.Enable();
     }
 
     private void OnDisable()
     {
-        if (rightTriggerAction != null) rightTriggerAction.Disable();
+        if (rightTriggerAction != null)
+            rightTriggerAction.Disable();
     }
 
-    void Update()
+    private void Update()
     {
         if (!IsOwner) return;
 
-        if (Input.GetKeyDown(KeyCode.K))
+        if (rightTriggerAction != null && rightTriggerAction.WasPressedThisFrame())
         {
-            SpawnBulletRpc(new RpcParams());
+            if (Time.time - lastShootTime >= cooldown)
+            {
+                lastShootTime = Time.time;
+                SpawnBulletServerRpc(firePoint.position, firePoint.forward);
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.L))
         {
-            DespawnBulletsRpc();
-        }
-
-        if (rightTriggerAction != null && rightTriggerAction.WasPressedThisFrame())
-        {
-            SpawnBulletRpc(new RpcParams());
+            DespawnBulletsServerRpc();
         }
     }
 
     [Rpc(SendTo.Server)]
-    private void SpawnBulletRpc(RpcParams rpcParams)
+    private void SpawnBulletServerRpc(Vector3 position, Vector3 direction)
     {
-        NetworkObject spawnedNetworkObject = NetworkObjectPool.Singleton.GetNetworkObject(spawnedObjectPrefab, transform.position, Quaternion.identity);
-        spawnedNetworkObject.SpawnWithOwnership(rpcParams.Receive.SenderClientId);
-        bulletList.Add(spawnedNetworkObject);
+        var bulletObject = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, position, Quaternion.LookRotation(direction));
+        bulletObject.Spawn();
 
-        spawnedNetworkObject.GetComponentInChildren<Rigidbody>().AddForce(Vector3.up * 0.5f);
+        bulletList.Add(bulletObject);
+
+        Rigidbody rb = bulletObject.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.velocity = direction * bulletForce;
+        }
     }
 
     [Rpc(SendTo.Server)]
-    private void DespawnBulletsRpc()
+    private void DespawnBulletsServerRpc()
     {
-        for (int i = bulletList.Count - 1; i >= 0; i--)
+        foreach (var bullet in bulletList)
         {
-            bulletList[i].Despawn();
+            if (bullet != null && bullet.IsSpawned)
+            {
+                bullet.Despawn();
+            }
         }
 
-        bulletList = new List<NetworkObject>();
+        bulletList.Clear();
     }
 }
