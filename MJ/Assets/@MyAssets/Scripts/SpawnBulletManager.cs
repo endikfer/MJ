@@ -2,18 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class SpawnBulletManager : NetworkBehaviour
 {
     [SerializeField] private GameObject spawnedObjectPrefab;
+    [SerializeField] private InputActionAsset inputActions;
 
     private GameObject spawnedObject;
-    private List<NetworkObject> ballList;
+    private List<NetworkObject> bulletList;
+    private InputAction rightTriggerAction;
 
     public override void OnNetworkSpawn()
     {
-        ballList = new List<NetworkObject>();
+        bulletList = new List<NetworkObject>();
         base.OnNetworkSpawn();
+
+        var vrMap = inputActions.FindActionMap("VRControls", true);
+        rightTriggerAction = vrMap.FindAction("RightTrigger", true);
+        rightTriggerAction.Enable();
+    }
+
+    private void OnDisable()
+    {
+        if (rightTriggerAction != null) rightTriggerAction.Disable();
     }
 
     void Update()
@@ -22,33 +34,38 @@ public class SpawnBulletManager : NetworkBehaviour
 
         if (Input.GetKeyDown(KeyCode.K))
         {
-            SpawnBallRpc(new RpcParams());
+            SpawnBulletRpc(new RpcParams());
         }
 
         if (Input.GetKeyDown(KeyCode.L))
         {
-            DespawnBallsRpc();
+            DespawnBulletsRpc();
+        }
+
+        if (rightTriggerAction != null && rightTriggerAction.WasPressedThisFrame())
+        {
+            SpawnBulletRpc(new RpcParams());
         }
     }
 
     [Rpc(SendTo.Server)]
-    private void SpawnBallRpc(RpcParams rpcParams)
+    private void SpawnBulletRpc(RpcParams rpcParams)
     {
         NetworkObject spawnedNetworkObject = NetworkObjectPool.Singleton.GetNetworkObject(spawnedObjectPrefab, transform.position, Quaternion.identity);
         spawnedNetworkObject.SpawnWithOwnership(rpcParams.Receive.SenderClientId);
-        ballList.Add(spawnedNetworkObject);
+        bulletList.Add(spawnedNetworkObject);
 
         spawnedNetworkObject.GetComponentInChildren<Rigidbody>().AddForce(Vector3.up * 0.5f);
     }
 
     [Rpc(SendTo.Server)]
-    private void DespawnBallsRpc()
+    private void DespawnBulletsRpc()
     {
-        for (int i = ballList.Count - 1; i >= 0; i--)
+        for (int i = bulletList.Count - 1; i >= 0; i--)
         {
-            ballList[i].Despawn();
+            bulletList[i].Despawn();
         }
 
-        ballList = new List<NetworkObject>();
+        bulletList = new List<NetworkObject>();
     }
 }
