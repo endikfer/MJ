@@ -147,4 +147,15 @@ public class FullGameManager : NetworkBehaviour
         }
     }
 
+    public int GetPlayerType(ulong clientId)
+    {
+        foreach (var player in playerDataList)
+        {
+            if (player.clientId == clientId)
+                return player.playerType;
+        }
+
+        return 0; // Default
+    }
+
 }

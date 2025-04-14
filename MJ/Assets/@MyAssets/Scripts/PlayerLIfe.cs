@@ -6,6 +6,7 @@ public class PlayerLIfe : MonoBehaviour
 {
     public float maxHealth = 100f;
     private float currentHealth;
+    public AnimatorController animator;
 
     void Start()
     {
@@ -29,7 +30,7 @@ public class PlayerLIfe : MonoBehaviour
 
     public void Die()
     {
-
+        animator.Die();
     }
 
     public float GetCurrentHealth()
