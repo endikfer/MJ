@@ -6,27 +6,41 @@ using UnityEngine.XR;
 
 public class PlayerSpawn : NetworkBehaviour
 {
-    public Transform xrRig; // La raíz del XR Rig (por ejemplo: XR Origin)
     public Transform SpawnPolice;
     public Transform SpawnContrab;
 
-
-    void Start()
+    /*public override void OnNetworkSpawn()
     {
         if (!IsOwner) return;
 
-        // Buscamos el punto de spawn según el tipo de jugador
+        // Espera un pequeño tiempo para asegurarse de que XR Rig está listo
+        StartCoroutine(DelayedSpawn());
+    }
+
+    private System.Collections.IEnumerator DelayedSpawn()
+    {
+        yield return new WaitForSeconds(0.1f); // Ajusta si es necesario
+
+        // Asegura que tienes acceso al XR Rig local
+        Transform xrRig = VrRigReferences.Singleton?.root;
+        if (xrRig == null)
+        {
+            Debug.LogError("No se encontró el XR Rig del jugador local.");
+            yield break;
+        }
+
         int playerType = FullGameManager.Instance.GetPlayerType(NetworkManager.LocalClientId);
+
 
         if (playerType == 0)
         {
-            xrRig.transform.position = SpawnContrab.transform.position;
-            xrRig.transform.rotation = SpawnContrab.transform.rotation;
+            xrRig.position = SpawnContrab.position;
+            xrRig.rotation = SpawnContrab.rotation;
         }
-        else if(playerType == 1)
+        else if (playerType == 1)
         {
-            xrRig.transform.position = SpawnPolice.transform.position;
-            xrRig.transform.rotation = SpawnPolice.transform.rotation;
+            xrRig.position = SpawnPolice.position;
+            xrRig.rotation = SpawnPolice.rotation;
         }
-    }
+    }*/
 }

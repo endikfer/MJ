@@ -6576,6 +6576,7 @@ GameObject:
   - component: {fileID: 1628709570}
   - component: {fileID: 1628709569}
   - component: {fileID: 1628709571}
+  - component: {fileID: 1628709573}
   - component: {fileID: 1628709572}
   m_Layer: 0
   m_Name: XR Origin (XR Rig)
@@ -6716,9 +6717,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f7a453a23f039d4f8dcbc6482c05ce0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xrRig: {fileID: 1628709567}
   SpawnPolice: {fileID: 830475044}
   SpawnContrab: {fileID: 1719066636}
+--- !u!114 &1628709573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1628709564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 723234784
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &1644829254
 GameObject:
   m_ObjectHideFlags: 0
