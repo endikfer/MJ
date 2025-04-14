@@ -56,6 +56,9 @@ public class FullGameManager : NetworkBehaviour
 
     public GAME_STATES gameState;
 
+    public Transform spawnContrabandista;
+    public Transform spawnPolicia;
+
     public NetworkList<PlayerData> playerDataList;
 
     public static FullGameManager Instance { get; private set; }
@@ -135,14 +138,31 @@ public class FullGameManager : NetworkBehaviour
 
     private void GameSceneLoaded(ulong clientId, string sceneName, LoadSceneMode loadSceneMode)
     {
-        if (clientId != NetworkManager.ServerClientId) return; // Asegúrate de que solo el servidor ejecuta esta lógica
+        if (clientId != NetworkManager.ServerClientId) return;
 
         gameState = GAME_STATES.Main;
 
         foreach (PlayerData playerData in playerDataList)
         {
-            // Instancia el personaje correspondiente para cada cliente
-            GameObject playerGo = Instantiate(playerPrefabs[playerData.playerType]);
+            // Determinar el spawn correcto
+            Transform spawnPoint = spawnContrabandista; // por defecto
+
+            if (playerData.playerType == 1)
+                spawnPoint = spawnPolicia;
+
+            // Validación para evitar errores si el spawn aún es null
+            if (spawnPoint == null)
+            {
+                Debug.LogWarning($"SpawnPoint para el jugador {playerData.playerType} no está asignado.");
+                spawnPoint = new GameObject("FallbackSpawn").transform; // Crear uno en (0,0,0)
+            }
+
+            GameObject playerGo = Instantiate(
+                playerPrefabs[playerData.playerType],
+                spawnPoint.position,
+                spawnPoint.rotation
+            );
+
             playerGo.GetComponent<NetworkObject>().SpawnAsPlayerObject(playerData.clientId, true);
         }
     }
