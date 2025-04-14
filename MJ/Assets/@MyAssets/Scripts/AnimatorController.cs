@@ -57,11 +57,9 @@ public class AnimatorController : NetworkBehaviour
 
         float currentSpeed = new Vector2(horizontal, vertical).magnitude;
 
-        UpdateAnimatorStateServerRpc(horizontal, vertical, currentSpeed);
-
-        /*animator.SetFloat("Horizontal", horizontal);
+        animator.SetFloat("Horizontal", horizontal);
         animator.SetFloat("Vertical", vertical);
-        animator.SetFloat("speed", currentSpeed);*/
+        animator.SetFloat("speed", currentSpeed);
     }
 
     public void Die()
@@ -80,26 +78,5 @@ public class AnimatorController : NetworkBehaviour
 
         // Sincroniza el estado en todos los clientes
         networkAnimator.SetTrigger("Die");
-    }
-
-    [ServerRpc]
-    public void UpdateAnimatorStateServerRpc(float horizontal, float vertical, float speed)
-    {
-        // El servidor procesa y sincroniza los parámetros
-        animator.SetFloat("Horizontal", horizontal);
-        animator.SetFloat("Vertical", vertical);
-        animator.SetFloat("speed", speed);
-
-        // Opcional: si deseas también propagar estos valores desde el servidor a otros clientes
-        UpdateAnimatorStateClientRpc(horizontal, vertical, speed);
-    }
-
-    [ClientRpc]
-    public void UpdateAnimatorStateClientRpc(float horizontal, float vertical, float speed)
-    {
-        // Actualiza los parámetros en los clientes
-        animator.SetFloat("Horizontal", horizontal);
-        animator.SetFloat("Vertical", vertical);
-        animator.SetFloat("speed", speed);
     }
 }
