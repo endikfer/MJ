@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 
 public class AnimatorController : NetworkBehaviour
@@ -9,6 +10,7 @@ public class AnimatorController : NetworkBehaviour
     private CharacterController xrCharacterController;
 
     public string xrOriginName = "XR Origin"; // asegúrate de que se llame así
+    private NetworkAnimator networkAnimator;
 
     public bool isDead = false;
 
@@ -17,6 +19,12 @@ public class AnimatorController : NetworkBehaviour
         if (!IsOwner) return; // solo controla su propio avatar
 
         animator = GetComponent<Animator>();
+        networkAnimator = GetComponent<NetworkAnimator>();
+
+        if (networkAnimator == null)
+        {
+            Debug.LogWarning("NetworkAnimator no encontrado en el jugador.");
+        }
 
         // Intenta buscar el XR Origin del jugador local
         GameObject xrOrigin = GameObject.Find(xrOriginName);
@@ -47,34 +55,51 @@ public class AnimatorController : NetworkBehaviour
         float horizontal = localVelocity.x;
         float vertical = localVelocity.z;
 
-        Debug.Log("Horizontal Velocity: " + horizontal);
-        Debug.Log("Vertical Velocity: " + vertical);
-
-        if (Mathf.Abs(horizontal) < 0.1f && Mathf.Abs(vertical) < 0.1f)
-        {
-            horizontal = 0f;
-            vertical = 0f;
-        }
-
         float currentSpeed = new Vector2(horizontal, vertical).magnitude;
 
-        animator.SetFloat("Horizontal", horizontal);
+        UpdateAnimatorStateServerRpc(horizontal, vertical, currentSpeed);
+
+        /*animator.SetFloat("Horizontal", horizontal);
         animator.SetFloat("Vertical", vertical);
-        animator.SetFloat("speed", currentSpeed);
-
-
-        if (currentSpeed < 0.1f) // Si la velocidad es suficientemente baja
-        {
-            animator.SetBool("IsWalking", false);  // Detiene la animación de caminar
-        }
-        else
-        {
-            animator.SetBool("IsWalking", true);   // Inicia la animación de caminar
-        }
+        animator.SetFloat("speed", currentSpeed);*/
     }
 
     public void Die()
     {
+        if (IsOwner)
+        {
+            // Llama al RPC para sincronizar el estado de "muerte"
+            DieServerRpc();
+        }
+    }
+
+    [ServerRpc]
+    public void DieServerRpc()
+    {
         isDead = true;
+
+        // Sincroniza el estado en todos los clientes
+        networkAnimator.SetTrigger("Die");
+    }
+
+    [ServerRpc]
+    public void UpdateAnimatorStateServerRpc(float horizontal, float vertical, float speed)
+    {
+        // El servidor procesa y sincroniza los parámetros
+        animator.SetFloat("Horizontal", horizontal);
+        animator.SetFloat("Vertical", vertical);
+        animator.SetFloat("speed", speed);
+
+        // Opcional: si deseas también propagar estos valores desde el servidor a otros clientes
+        UpdateAnimatorStateClientRpc(horizontal, vertical, speed);
+    }
+
+    [ClientRpc]
+    public void UpdateAnimatorStateClientRpc(float horizontal, float vertical, float speed)
+    {
+        // Actualiza los parámetros en los clientes
+        animator.SetFloat("Horizontal", horizontal);
+        animator.SetFloat("Vertical", vertical);
+        animator.SetFloat("speed", speed);
     }
 }
