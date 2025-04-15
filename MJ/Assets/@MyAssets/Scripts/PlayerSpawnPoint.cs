@@ -7,7 +7,7 @@ public class PlayerSpawnPoint : MonoBehaviour
     public enum SpawnType { Contrabandista, Policia }
     public SpawnType spawnType;
 
-    private void Start()
+    private void OnEnable()
     {
         if (FullGameManager.Instance == null) return;
 

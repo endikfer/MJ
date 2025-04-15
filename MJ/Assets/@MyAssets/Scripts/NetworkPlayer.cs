@@ -27,10 +27,20 @@ public class NetworkPlayer : NetworkBehaviour
 
 
 
-    // Update is called once per frame
-    void Update()
+    private bool initialized = false;
+
+    void Start()
     {
         if (IsOwner)
+        {
+            VrRigReferences.Singleton.TeleportRig(root.position, root.rotation);
+            initialized = true;
+        }
+    }
+
+    void Update()
+    {
+        if (IsOwner && initialized)
         {
             root.position = VrRigReferences.Singleton.root.position;
             root.rotation = VrRigReferences.Singleton.root.rotation;

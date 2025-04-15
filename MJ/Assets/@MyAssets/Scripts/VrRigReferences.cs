@@ -15,4 +15,9 @@ public class VrRigReferences : MonoBehaviour
     {
         Singleton = this;
     }
+    public void TeleportRig(Vector3 position, Quaternion rotation)
+    {
+        root.position = position;
+        root.rotation = rotation;
+    }
 }

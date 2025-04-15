@@ -140,21 +140,27 @@ public class FullGameManager : NetworkBehaviour
     {
         if (clientId != NetworkManager.ServerClientId) return;
 
+        StartCoroutine(SpawnPlayersWithDelay());
+    }
+
+    private IEnumerator SpawnPlayersWithDelay()
+    {
+        // Espera un frame para asegurarte de que los PlayerSpawnPoint hayan ejecutado OnEnable
+        yield return null;
+
         gameState = GAME_STATES.Main;
 
         foreach (PlayerData playerData in playerDataList)
         {
-            // Determinar el spawn correcto
-            Transform spawnPoint = spawnContrabandista; // por defecto
+            Transform spawnPoint = spawnContrabandista; // default
 
             if (playerData.playerType == 1)
                 spawnPoint = spawnPolicia;
 
-            // Validación para evitar errores si el spawn aún es null
             if (spawnPoint == null)
             {
                 Debug.LogWarning($"SpawnPoint para el jugador {playerData.playerType} no está asignado.");
-                spawnPoint = new GameObject("FallbackSpawn").transform; // Crear uno en (0,0,0)
+                spawnPoint = new GameObject("FallbackSpawn").transform;
             }
 
             GameObject playerGo = Instantiate(
