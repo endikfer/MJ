@@ -20,6 +20,7 @@ public class PlayerAgent : Agent
         var actionMove = actionBuffers.DiscreteActions[0];
         var actionRotate = actionBuffers.DiscreteActions[1];
         var actionJump = actionBuffers.DiscreteActions[2];
+        
 
         switch (actionMove)
         {
@@ -34,10 +35,10 @@ public class PlayerAgent : Agent
         switch (actionRotate)
         {
             case 1:
-                transform.Rotate(Vector3.up * -5f);
+                transform.Rotate(Vector3.up * -1f);
                 break;
             case 2:
-                transform.Rotate(Vector3.up * 5f);
+                transform.Rotate(Vector3.up * 1f);
                 break;
         }
 
@@ -47,7 +48,7 @@ public class PlayerAgent : Agent
                 if (IsGrounded())
                 {
                     var rb = GetComponent<Rigidbody>();
-                    rb.AddForce(Vector3.up * 300f, ForceMode.Impulse);
+                    rb.AddForce(Vector3.up * 100f, ForceMode.Impulse);
                 }
                 break;
         }
@@ -56,7 +57,7 @@ public class PlayerAgent : Agent
 
     private bool IsGrounded()
     {
-        return Physics.Raycast(transform.position, Vector3.down, 1.1f);
+        return Physics.Raycast(transform.position, Vector3.down, 0.3f);
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
