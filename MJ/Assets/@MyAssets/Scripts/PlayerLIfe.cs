@@ -25,7 +25,14 @@ public class PlayerLIfe : MonoBehaviour
 
     public void Heal(float amount)
     {
-        currentHealth += amount;
+        if (currentHealth > maxHealth)
+        {
+            currentHealth += amount;
+        }
+        if(currentHealth <= maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
     }
 
     public void Die()
