@@ -1,7 +1,8 @@
 using UnityEngine;
+using Unity.Netcode;
 using System.Collections;
 
-public class HealingSpawner : MonoBehaviour
+public class HealingSpawner : NetworkBehaviour
 {
     public static HealingSpawner Instance;
 
@@ -16,9 +17,15 @@ public class HealingSpawner : MonoBehaviour
         Instance = this;
     }
 
-    void Start()
+    public override void OnNetworkSpawn()
     {
-        StartCoroutine(SpawnFirstAfterDelay(5f));
+        Debug.Log("OnNetworkSpawn() - ¿Es server?: " + IsServer);
+
+        if (IsServer)
+        {
+            Debug.Log("Soy el host, arranco el spawn");
+            StartCoroutine(SpawnFirstAfterDelay(5f));
+        }
     }
 
     IEnumerator SpawnFirstAfterDelay(float delay)
@@ -30,7 +37,14 @@ public class HealingSpawner : MonoBehaviour
     void SpawnHealingItem()
     {
         int index = Random.Range(0, spawnPoints.Length);
-        currentHealingItem = Instantiate(healingPrefab, spawnPoints[index].position, Quaternion.identity);
+        Debug.Log("Medkit instanciado en: " + spawnPoints[index].position + " por " + (IsServer ? "host" : "cliente"));
+
+        GameObject item = Instantiate(healingPrefab, spawnPoints[index].position, Quaternion.identity);
+
+        NetworkObject netObj = item.GetComponent<NetworkObject>();
+        netObj.Spawn();
+
+        currentHealingItem = item;
     }
 
     public void OnHealingItemCollected()
@@ -40,7 +54,6 @@ public class HealingSpawner : MonoBehaviour
             firstCollected = true;
         }
 
-        // Espera 15 segundos antes de volver a instanciar
         StartCoroutine(WaitAndSpawnNext(15f));
     }
 
