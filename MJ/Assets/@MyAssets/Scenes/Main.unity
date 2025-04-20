@@ -1529,7 +1529,9 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 1395604484
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 654309498387600164, guid: 6f1a7354265853f44b0ed5e2e43676ad, type: 3}
+    - {fileID: 7346545690859781240, guid: 6f1a7354265853f44b0ed5e2e43676ad, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -1549,6 +1551,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 275581100}
+    - targetCorrespondingSourceObject: {fileID: 1694449805434718, guid: 6f1a7354265853f44b0ed5e2e43676ad,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 275581102}
   m_SourcePrefab: {fileID: 100100000, guid: 6f1a7354265853f44b0ed5e2e43676ad, type: 3}
 --- !u!1 &275581097 stripped
 GameObject:
@@ -1641,6 +1647,22 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &275581102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 275581097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5674f3ceb670378409c2c66aeff485c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPrefab: {fileID: 5178155969580373748, guid: e50fcf2bdfb099f41bab77127d4e0bad,
+    type: 3}
+  firePoint: {fileID: 639776321}
+  fireRate: 0.5
 --- !u!1001 &346650534
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2571,6 +2593,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5015851073235153941, guid: fd8212a6b4413da43bfbf816034a6a69,
     type: 3}
   m_PrefabInstance: {fileID: 634923250}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &639776321 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3448934867370272721, guid: 6f1a7354265853f44b0ed5e2e43676ad,
+    type: 3}
+  m_PrefabInstance: {fileID: 275581096}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &642564999
 PrefabInstance:
