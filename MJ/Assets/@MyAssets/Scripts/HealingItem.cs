@@ -7,6 +7,7 @@ public class HealingItem : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("ha entrado " + other.tag);
         if (!IsServer) return; // solo el servidor procesa la colisión
 
         if (other.CompareTag("Player"))

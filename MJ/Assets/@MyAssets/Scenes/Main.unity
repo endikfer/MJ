@@ -8783,7 +8783,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07d72daae6dfd854789f7d1a7bbffcd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healingPrefab: {fileID: 7355713013926475229, guid: 82a76256a42024049964a0c8b9bb380f,
+  healingPrefab: {fileID: 7355713013926475229, guid: d65b2e1b483641744828efbe3ae5f73b,
     type: 3}
   spawnPoints:
   - {fileID: 1205744407}
