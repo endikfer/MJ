@@ -6,21 +6,30 @@ public class BulletLogic : NetworkBehaviour
     public float speed = 20f;
     public float lifetime = 3f;
 
-    private void Start()
-    {
-        GetComponent<Rigidbody>().velocity = transform.forward * speed;
+    private Rigidbody rb;
 
-        if (IsServer)
-        {
-            Destroy(gameObject, lifetime);
-        }
+    public override void OnNetworkSpawn()
+    {
+        if (!IsServer) return;
+
+        rb = GetComponent<Rigidbody>();
+        rb.velocity = transform.forward * speed;
+
+        Invoke(nameof(DestroySelf), lifetime);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (IsServer)
+        if (!IsServer) return;
+
+        DestroySelf();
+    }
+
+    private void DestroySelf()
+    {
+        if (IsSpawned)
         {
-            Destroy(gameObject);
+            GetComponent<NetworkObject>().Despawn();
         }
     }
 }
