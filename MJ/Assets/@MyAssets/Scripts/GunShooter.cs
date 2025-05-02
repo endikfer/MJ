@@ -14,9 +14,8 @@ public class GunShooter : NetworkBehaviour
         if (!IsOwner) return;
 
         bool rightTriggerPressed = false;
-        bool leftMouseClicked = Input.GetMouseButtonDown(0); // L click
+        bool leftMouseClicked = Input.GetMouseButtonDown(0);
 
-        // Check right VR trigger (PrimaryButton / Trigger)
         InputDevice rightHand = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
         if (rightHand.TryGetFeatureValue(CommonUsages.triggerButton, out bool triggerValue))
         {
@@ -26,6 +25,9 @@ public class GunShooter : NetworkBehaviour
         if ((rightTriggerPressed || leftMouseClicked) && Time.time >= nextFireTime)
         {
             nextFireTime = Time.time + fireRate;
+
+            Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+
             FireServerRpc(firePoint.position, firePoint.rotation);
         }
     }

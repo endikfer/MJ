@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 
+[RequireComponent(typeof(Rigidbody), typeof(NetworkObject))]
 public class BulletLogic : NetworkBehaviour
 {
     public float speed = 20f;
@@ -8,21 +9,23 @@ public class BulletLogic : NetworkBehaviour
 
     private Rigidbody rb;
 
-    public override void OnNetworkSpawn()
+    private void Start()
     {
-        if (!IsServer) return;
-
         rb = GetComponent<Rigidbody>();
-        rb.velocity = transform.forward * speed;
 
-        Invoke(nameof(DestroySelf), lifetime);
+        if (IsServer)
+        {
+            rb.velocity = transform.forward * speed;
+            Invoke(nameof(DestroySelf), lifetime);
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (!IsServer) return;
-
-        DestroySelf();
+        if (IsServer)
+        {
+            DestroySelf();
+        }
     }
 
     private void DestroySelf()
