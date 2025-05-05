@@ -25,31 +25,16 @@ public class GunShooter : NetworkBehaviour
         if ((rightTriggerPressed || leftMouseClicked) && Time.time >= nextFireTime)
         {
             nextFireTime = Time.time + fireRate;
-            
-            FireServerRpc(firePoint.position, firePoint.rotation);
+
+            SpawnBulletRpc(firePoint.position, firePoint.rotation);
         }
     }
 
-    [ServerRpc]
-    private void FireServerRpc(Vector3 position, Quaternion rotation)
+    [Rpc(SendTo.Server)]
+    private void SpawnBulletRpc(Vector3 position, Quaternion rotation, RpcParams rpcParams = default)
     {
-        if (bulletPrefab == null)
-        {
-            Debug.LogError("bulletPrefab es NULL en el servidor");
-            return;
-        }
-
-        GameObject bullet = Instantiate(bulletPrefab, position, rotation);
-        var netObj = bullet.GetComponent<NetworkObject>();
-        if (netObj == null)
-        {
-            Debug.LogError("NO hay NetworkObject en el prefab de la bala.");
-            return;
-        }
-
-        Debug.Log($"Bullet prefab name: {bulletPrefab.name}, has NetworkObject: {bulletPrefab.GetComponent<NetworkObject>() != null}");
-
-        netObj.Spawn();
+        NetworkObject bulletNetObj = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, position, rotation);
+        bulletNetObj.SpawnWithOwnership(rpcParams.Receive.SenderClientId);
+        bulletNetObj.GetComponent<BulletLogic>().Init();
     }
-
 }

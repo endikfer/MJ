@@ -202,9 +202,9 @@ MonoBehaviour:
     Prefabs:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: 881b9a15f84c86b48a167b24bc52674c, type: 2}
-    TickRate: 50
+    TickRate: 30
     ClientConnectionBufferTimeout: 10
-    ConnectionApproval: 1
+    ConnectionApproval: 0
     ConnectionData: 
     EnableTimeResync: 0
     TimeResyncInterval: 30
@@ -232,9 +232,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f875572178245cd46ab1d53dcb888fec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnFailedToJoin:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &129908114
 GameObject:
   m_ObjectHideFlags: 0
@@ -3179,6 +3176,8 @@ MonoBehaviour:
   - {fileID: 6650292811616477708, guid: 08958b5e52499a748aaef5f1b9e9f344, type: 3}
   - {fileID: 6650292811616477708, guid: 5f9364cfdc08f3d408738ef2a04380b8, type: 3}
   gameState: 0
+  spawnContrabandista: {fileID: 0}
+  spawnPolicia: {fileID: 0}
 --- !u!4 &1733702708
 Transform:
   m_ObjectHideFlags: 0

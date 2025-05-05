@@ -8,7 +8,6 @@ using UnityEngine.Events;
 public class MyNetworkManager : MonoBehaviour
 {
     private const int MAX_PLAYER_AMOUNT = 2;
-    public UnityEvent OnFailedToJoin = new UnityEvent();
 
     public void StartHost()
     {
@@ -26,13 +25,7 @@ public class MyNetworkManager : MonoBehaviour
 
     public void StartClient()
     {
-        NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectCallback;
         NetworkManager.Singleton.StartClient();
-    }
-
-    private void OnClientDisconnectCallback(ulong obj)
-    {
-        OnFailedToJoin.Invoke();
     }
 
     public void GoBack()

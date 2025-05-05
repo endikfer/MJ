@@ -13,11 +13,13 @@ public class BulletLogic : NetworkBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
-    public override void OnNetworkSpawn()
+    public void Init()
     {
+        if (rb == null) rb = GetComponent<Rigidbody>();
+        rb.velocity = transform.forward * speed;
+
         if (IsServer)
         {
-            rb.velocity = transform.forward * speed;
             Destroy(gameObject, lifetime);
         }
     }
