@@ -305,6 +305,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   newCameraPosition: {fileID: 179066020}
   camaraController: {fileID: 963194229}
+  agent: {fileID: 1318795322479187658}
 --- !u!65 &336976627
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1985,6 +1986,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   newCameraPosition: {fileID: 1994049088}
   camaraController: {fileID: 963194229}
+  agent: {fileID: 1318795322479187658}
 --- !u!65 &1607951355
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2159,6 +2161,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   newCameraPosition: {fileID: 1322664275}
   camaraController: {fileID: 963194229}
+  agent: {fileID: 1318795322479187658}
 --- !u!65 &1740029487
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2526,6 +2529,11 @@ MonoBehaviour:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
   MaxStep: 3000
+  useVectorObs: 1
+  successesRequired: 10
+  levelStartPosition: {fileID: 0}
+  levelTargets: []
+  rb: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

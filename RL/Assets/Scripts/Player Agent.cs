@@ -8,6 +8,17 @@ using Unity.MLAgents.Actuators;
 public class PlayerAgent : Agent
 {
     public bool useVectorObs;
+
+    private int currentLevel = 1;
+    private int successStreak = 0;
+    private int totalLevels = 4;
+    public int successesRequired = 10;
+
+    public Transform levelStartPosition;
+    public Transform[] levelTargets;
+
+    public Rigidbody rb;
+
     public override void CollectObservations(VectorSensor sensor)
     {
         if (useVectorObs)
@@ -91,6 +102,44 @@ public class PlayerAgent : Agent
 
     public override void OnEpisodeBegin()
     {
-        
+        if (StepCount >= MaxStep && successStreak < successesRequired)
+        {
+            RegisterFailure();
+        }
+
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        transform.localPosition = levelStartPosition.localPosition;
+    }
+
+    // Puedes usar este método cuando detectes que el agente completó el objetivo correctamente
+    public void RegisterSuccess()
+    {
+        successStreak++;
+
+        if (successStreak >= successesRequired)
+        {
+            if (currentLevel < totalLevels)
+            {
+                currentLevel++;
+                successStreak = 0;
+                Debug.Log("¡Avanzas al nivel " + currentLevel + "!");
+            }
+            else
+            {
+                Debug.Log("¡Has completado todos los niveles!");
+                EndEpisode();
+            }
+        }
+
+        EndEpisode();
+    }
+
+    // Si el agente falla o no termina en MaxStep, llamas a esto
+    public void RegisterFailure()
+    {
+        successStreak = 0;
+        EndEpisode();
     }
 }
