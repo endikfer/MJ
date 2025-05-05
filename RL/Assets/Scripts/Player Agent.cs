@@ -7,9 +7,13 @@ using Unity.MLAgents.Actuators;
 
 public class PlayerAgent : Agent
 {
+    public bool useVectorObs;
     public override void CollectObservations(VectorSensor sensor)
     {
-        
+        if (useVectorObs)
+        {
+            sensor.AddObservation(StepCount / (float)MaxStep);
+        }
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
