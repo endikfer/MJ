@@ -19,6 +19,11 @@ public class PlayerAgent : Agent
 
     public Rigidbody rb;
 
+    public CamaraController camaraController;
+    public Transform[] newCameraPositions;
+
+    private int currentDoorIndex = 0;
+
     public override void CollectObservations(VectorSensor sensor)
     {
         if (useVectorObs)
@@ -111,6 +116,13 @@ public class PlayerAgent : Agent
         rb.angularVelocity = Vector3.zero;
 
         transform.localPosition = levelStartPosition.localPosition;
+
+        currentDoorIndex = 0;
+
+        if (camaraController != null && newCameraPositions.Length >= currentLevel - 1)
+        {
+            camaraController.MoveToPosition(newCameraPositions[0].position);
+        }
     }
 
     // Puedes usar este método cuando detectes que el agente completó el objetivo correctamente
@@ -129,7 +141,6 @@ public class PlayerAgent : Agent
             else
             {
                 Debug.Log("¡Has completado todos los niveles!");
-                EndEpisode();
             }
         }
 
@@ -141,5 +152,30 @@ public class PlayerAgent : Agent
     {
         successStreak = 0;
         EndEpisode();
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Door"))
+        {
+            int doorsPerLevel = currentLevel; // Nivel 2 = 2 puertas, nivel 3 = 3 puertas...
+
+            currentDoorIndex++;
+
+            if (currentDoorIndex < doorsPerLevel)
+            {
+                // Cambiar cámara a la siguiente posición
+                int camIndex = Mathf.Min(currentDoorIndex, newCameraPositions.Length - 1);
+                if (camaraController != null)
+                {
+                    camaraController.MoveToPosition(newCameraPositions[camIndex].position);
+                }
+            }
+            else
+            {
+                // Última puerta -> éxito
+                RegisterSuccess();
+            }
+        }
     }
 }
