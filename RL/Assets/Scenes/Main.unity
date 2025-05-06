@@ -418,7 +418,7 @@ GameObject:
   - component: {fileID: 488802186}
   m_Layer: 0
   m_Name: Cube (1)
-  m_TagString: Untagged
+  m_TagString: Jump
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -670,7 +670,7 @@ GameObject:
   - component: {fileID: 637189145}
   m_Layer: 0
   m_Name: Cube (2)
-  m_TagString: Untagged
+  m_TagString: Jump
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1129,7 +1129,7 @@ GameObject:
   - component: {fileID: 892722812}
   m_Layer: 0
   m_Name: Suelo
-  m_TagString: Untagged
+  m_TagString: Jump
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1676,6 +1676,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Boton
       objectReference: {fileID: 0}
+    - target: {fileID: 6666938705244941386, guid: 6624d16679a7bb74dacf45dd149d44e5, type: 3}
+      propertyPath: m_TagString
+      value: Jump
+      objectReference: {fileID: 0}
     - target: {fileID: 8581080541619994824, guid: 6624d16679a7bb74dacf45dd149d44e5, type: 3}
       propertyPath: door
       value: 
@@ -2215,7 +2219,7 @@ GameObject:
   - component: {fileID: 1691701598}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Jump
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

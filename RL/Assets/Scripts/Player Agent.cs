@@ -9,6 +9,8 @@ public class PlayerAgent : Agent
 {
     public bool useVectorObs;
 
+    private bool canJump = false;
+
     private int currentLevel = 1;
     private int successStreak = 0;
     private int totalLevels = 4;
@@ -72,19 +74,14 @@ public class PlayerAgent : Agent
         switch (actionJump)
         {
             case 1:
-                if (IsGrounded())
+                if (canJump)
                 {
                     var rb = GetComponent<Rigidbody>();
-                    rb.AddForce(Vector3.up * 100f, ForceMode.Impulse);
+                    rb.AddForce(Vector3.up * 80f, ForceMode.Impulse);
                 }
                 break;
         }
         transform.position += dirToGo * Time.deltaTime;
-    }
-
-    private bool IsGrounded()
-    {
-        return Physics.Raycast(transform.position, Vector3.down, 0.3f);
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -226,6 +223,22 @@ public class PlayerAgent : Agent
                     puertas[currentDoorIndex - 2].GetComponentInChildren<Door>().CloseDoor();
                 }
             }
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Jump"))
+        {
+            canJump = true;
+        }
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Jump"))
+        {
+            canJump = false;
         }
     }
 
