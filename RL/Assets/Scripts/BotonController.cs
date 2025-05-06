@@ -5,22 +5,21 @@ using UnityEngine;
 public class BotonController : MonoBehaviour
 {
     public Door door;
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public GameObject puerta;
 
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player")){
-            door.OpenDoor();
+            if (door.open == false)
+            {
+                door.OpenDoor();
+                puerta.GetComponent<Collider>().isTrigger = true;
+            }
+            else
+            {
+                door.CloseDoor();
+                puerta.GetComponent<Collider>().isTrigger = false;
+            }
         }
     }
 }

@@ -34,6 +34,11 @@ public class PlayerAgent : Agent
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
+        if (StepCount >= MaxStep && successStreak < successesRequired)
+        {
+            RegisterFailure();
+        }
+
         var dirToGo = Vector3.zero;
         var rotateDir = Vector3.zero;
 
@@ -107,11 +112,6 @@ public class PlayerAgent : Agent
 
     public override void OnEpisodeBegin()
     {
-        if (StepCount >= MaxStep && successStreak < successesRequired)
-        {
-            RegisterFailure();
-        }
-
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
@@ -122,6 +122,29 @@ public class PlayerAgent : Agent
         if (camaraController != null && newCameraPositions.Length >= currentLevel - 1)
         {
             camaraController.MoveToPosition(newCameraPositions[0].position);
+        }
+
+        foreach (var door in GameObject.FindGameObjectsWithTag("Puerta"))
+        {
+            if (door.name == "puerta")
+            {
+                Collider doorCol = door.GetComponent<Collider>();
+                if (doorCol != null)
+                {
+                    doorCol.isTrigger = true;
+                }
+            }
+
+            if(door.name == "Puerta" && door.GetComponent<Collider>().isTrigger == true)
+            {
+                door.GetComponent<Collider>().isTrigger = false;
+                
+            }
+            if(door.name == "Door_3_Yellow" && door.GetComponentInChildren<Door>().open == true)
+            {
+                door.GetComponentInChildren<Door>().open = false;
+                door.GetComponentInChildren<Door>().CloseDoor();
+            }
         }
     }
 
@@ -156,7 +179,7 @@ public class PlayerAgent : Agent
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Door"))
+        if (other.CompareTag("Puerta"))
         {
             int doorsPerLevel = currentLevel; // Nivel 2 = 2 puertas, nivel 3 = 3 puertas...
 
@@ -178,4 +201,31 @@ public class PlayerAgent : Agent
             }
         }
     }
+
+    public void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Puerta"))
+        {
+            // Solo cerrar puertas si ya avanzó al menos al nivel 2
+            if (currentLevel > 1)
+            {
+                // Solo cerramos la puerta si corresponde al nivel anterior
+                if (currentDoorIndex == 1)
+                {
+                    other.GetComponent<Collider>().isTrigger = false;
+                }
+                else if (currentDoorIndex > 1)
+                {
+                    // Cerrar la puerta visualmente
+                    Door doorScript = other.GetComponent<Door>();
+                    if (doorScript != null)
+                    {
+                        doorScript.CloseDoor();
+                    }
+                }
+            }
+        }
+    }
+
+
 }

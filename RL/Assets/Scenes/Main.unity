@@ -122,6 +122,59 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &71090901
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 71090902}
+  - component: {fileID: 71090903}
+  m_Layer: 0
+  m_Name: Puerta
+  m_TagString: Puerta
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &71090902
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 71090901}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 534653233}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &71090903
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 71090901}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.05952263, y: 1.0076151, z: 0.5637338}
+  m_Center: {x: 0.0000009536743, y: 0.49831223, z: 1.083189}
 --- !u!1 &179066019
 GameObject:
   m_ObjectHideFlags: 0
@@ -303,10 +356,9 @@ GameObject:
   m_Component:
   - component: {fileID: 336976625}
   - component: {fileID: 336976627}
-  - component: {fileID: 336976626}
   m_Layer: 0
   m_Name: puerta
-  m_TagString: Untagged
+  m_TagString: Puerta
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -326,21 +378,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2050216720}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &336976626
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 336976624}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c20b67ce0267c6147a44c448d238a761, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  newCameraPosition: {fileID: 179066020}
-  camaraController: {fileID: 963194229}
-  agent: {fileID: 1318795322479187658}
 --- !u!65 &336976627
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -468,6 +505,59 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 488802184}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &499555984
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 499555985}
+  - component: {fileID: 499555986}
+  m_Layer: 0
+  m_Name: Puerta
+  m_TagString: Puerta
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &499555985
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 499555984}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 847658107}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &499555986
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 499555984}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.069164276, y: 1.007586, z: 0.7888086}
+  m_Center: {x: -0.0025157928, y: 0.5030663, z: 0.78140795}
 --- !u!1001 &534653232
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -476,6 +566,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 724430319}
     m_Modifications:
+    - target: {fileID: 2190190343176602858, guid: a2ef907af108c29458a5048e69d86d54, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.998
+      objectReference: {fileID: 0}
+    - target: {fileID: 2193103868508165422, guid: a2ef907af108c29458a5048e69d86d54, type: 3}
+      propertyPath: m_TagString
+      value: Puerta
+      objectReference: {fileID: 0}
     - target: {fileID: 2486153576367788102, guid: a2ef907af108c29458a5048e69d86d54, type: 3}
       propertyPath: m_Name
       value: Pared puerta (2)
@@ -486,7 +584,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2938302312211354538, guid: a2ef907af108c29458a5048e69d86d54, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.339
+      value: -0.528
       objectReference: {fileID: 0}
     - target: {fileID: 6839398697338783950, guid: a2ef907af108c29458a5048e69d86d54, type: 3}
       propertyPath: m_LocalScale.z
@@ -542,7 +640,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 6839398697338783950, guid: a2ef907af108c29458a5048e69d86d54, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 71090902}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a2ef907af108c29458a5048e69d86d54, type: 3}
 --- !u!4 &534653233 stripped
@@ -896,6 +997,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 724430319}
     m_Modifications:
+    - target: {fileID: 2190190343176602858, guid: a2ef907af108c29458a5048e69d86d54, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.777
+      objectReference: {fileID: 0}
+    - target: {fileID: 2193103868508165422, guid: a2ef907af108c29458a5048e69d86d54, type: 3}
+      propertyPath: m_TagString
+      value: Puerta
+      objectReference: {fileID: 0}
     - target: {fileID: 2486153576367788102, guid: a2ef907af108c29458a5048e69d86d54, type: 3}
       propertyPath: m_Name
       value: Pared puerta (3)
@@ -970,11 +1079,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7740940315649416751, guid: a2ef907af108c29458a5048e69d86d54, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.27
+      value: 2.304
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 6839398697338783950, guid: a2ef907af108c29458a5048e69d86d54, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 499555985}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a2ef907af108c29458a5048e69d86d54, type: 3}
 --- !u!4 &847658107 stripped
@@ -1414,6 +1526,10 @@ PrefabInstance:
       propertyPath: door
       value: 
       objectReference: {fileID: 850928137}
+    - target: {fileID: 8581080541619994824, guid: 6624d16679a7bb74dacf45dd149d44e5, type: 3}
+      propertyPath: puerta
+      value: 
+      objectReference: {fileID: 71090901}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1484,6 +1600,10 @@ PrefabInstance:
       propertyPath: door
       value: 
       objectReference: {fileID: 657291787}
+    - target: {fileID: 8581080541619994824, guid: 6624d16679a7bb74dacf45dd149d44e5, type: 3}
+      propertyPath: puerta
+      value: 
+      objectReference: {fileID: 499555984}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1550,6 +1670,10 @@ PrefabInstance:
       propertyPath: door
       value: 
       objectReference: {fileID: 2142318995}
+    - target: {fileID: 8581080541619994824, guid: 6624d16679a7bb74dacf45dd149d44e5, type: 3}
+      propertyPath: puerta
+      value: 
+      objectReference: {fileID: 1740029484}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1651,6 +1775,10 @@ PrefabInstance:
       propertyPath: door
       value: 
       objectReference: {fileID: 1353541536}
+    - target: {fileID: 8581080541619994824, guid: 6624d16679a7bb74dacf45dd149d44e5, type: 3}
+      propertyPath: puerta
+      value: 
+      objectReference: {fileID: 1607951352}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1746,6 +1874,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 724430319}
     m_Modifications:
+    - target: {fileID: 2193103868508165422, guid: a2ef907af108c29458a5048e69d86d54, type: 3}
+      propertyPath: m_TagString
+      value: Puerta
+      objectReference: {fileID: 0}
     - target: {fileID: 2255684349476386392, guid: a2ef907af108c29458a5048e69d86d54, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -1950,6 +2082,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 724430319}
     m_Modifications:
+    - target: {fileID: 2193103868508165422, guid: a2ef907af108c29458a5048e69d86d54, type: 3}
+      propertyPath: m_TagString
+      value: Puerta
+      objectReference: {fileID: 0}
     - target: {fileID: 2486153576367788102, guid: a2ef907af108c29458a5048e69d86d54, type: 3}
       propertyPath: m_Name
       value: Pared puerta (1)
@@ -2012,10 +2148,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1607951353}
   - component: {fileID: 1607951355}
-  - component: {fileID: 1607951354}
   m_Layer: 0
   m_Name: Puerta
-  m_TagString: Untagged
+  m_TagString: Puerta
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2035,21 +2170,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 970580737}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1607951354
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1607951352}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c20b67ce0267c6147a44c448d238a761, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  newCameraPosition: {fileID: 1994049088}
-  camaraController: {fileID: 963194229}
-  agent: {fileID: 1318795322479187658}
 --- !u!65 &1607951355
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2065,7 +2185,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -2187,10 +2307,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1740029485}
   - component: {fileID: 1740029487}
-  - component: {fileID: 1740029486}
   m_Layer: 0
   m_Name: Puerta
-  m_TagString: Untagged
+  m_TagString: Puerta
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2210,21 +2329,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 890489808}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1740029486
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1740029484}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c20b67ce0267c6147a44c448d238a761, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  newCameraPosition: {fileID: 1322664275}
-  camaraController: {fileID: 963194229}
-  agent: {fileID: 1318795322479187658}
 --- !u!65 &1740029487
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2240,7 +2344,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -2591,14 +2695,23 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 1000
+  MaxStep: 3000
   useVectorObs: 1
   successesRequired: 1
   levelStartPosition: {fileID: 693850433}
-  levelTargets: []
+  levelTargets:
+  - {fileID: 336976625}
+  - {fileID: 1740029485}
+  - {fileID: 1607951353}
+  - {fileID: 71090902}
+  - {fileID: 499555985}
   rb: {fileID: 1318795322479187657}
-  camaraController: {fileID: 0}
-  newCameraPositions: []
+  camaraController: {fileID: 963194229}
+  newCameraPositions:
+  - {fileID: 1227922666}
+  - {fileID: 179066020}
+  - {fileID: 1322664275}
+  - {fileID: 1994049088}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
