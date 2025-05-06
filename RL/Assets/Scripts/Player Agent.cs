@@ -120,6 +120,7 @@ public class PlayerAgent : Agent
         transform.localPosition = levelStartPosition.localPosition;
 
         currentDoorIndex = 0;
+        
 
         if (camaraController != null && newCameraPositions.Length >= currentLevel - 1)
         {
@@ -176,6 +177,7 @@ public class PlayerAgent : Agent
     public void RegisterFailure()
     {
         successStreak = 0;
+        currentLevel = 1;
         EndEpisode();
     }
 
