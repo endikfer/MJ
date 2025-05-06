@@ -175,6 +175,11 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.05952263, y: 1.0076151, z: 0.5637338}
   m_Center: {x: 0.0000009536743, y: 0.49831223, z: 1.083189}
+--- !u!1 &173615024 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2193103868508165422, guid: a2ef907af108c29458a5048e69d86d54, type: 3}
+  m_PrefabInstance: {fileID: 847658106}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &179066019
 GameObject:
   m_ObjectHideFlags: 0
@@ -1466,6 +1471,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1023869338}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1033897270 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2193103868508165422, guid: a2ef907af108c29458a5048e69d86d54, type: 3}
+  m_PrefabInstance: {fileID: 1592590655}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1100415787
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2350,6 +2360,16 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.067943186, y: 1.0000001, z: 0.7243917}
   m_Center: {x: -0.005011156, y: 0.50110596, z: 1.0047177}
+--- !u!1 &1857196269 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2193103868508165422, guid: a2ef907af108c29458a5048e69d86d54, type: 3}
+  m_PrefabInstance: {fileID: 534653232}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1990203143 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2193103868508165422, guid: a2ef907af108c29458a5048e69d86d54, type: 3}
+  m_PrefabInstance: {fileID: 1421499310}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1994049087
 GameObject:
   m_ObjectHideFlags: 0
@@ -2705,6 +2725,11 @@ MonoBehaviour:
   - {fileID: 1607951353}
   - {fileID: 71090902}
   - {fileID: 499555985}
+  puertas:
+  - {fileID: 1990203143}
+  - {fileID: 1033897270}
+  - {fileID: 1857196269}
+  - {fileID: 173615024}
   rb: {fileID: 1318795322479187657}
   camaraController: {fileID: 963194229}
   newCameraPositions:

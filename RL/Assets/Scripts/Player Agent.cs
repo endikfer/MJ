@@ -17,6 +17,8 @@ public class PlayerAgent : Agent
     public Transform levelStartPosition;
     public Transform[] levelTargets;
 
+    public GameObject[] puertas;
+
     public Rigidbody rb;
 
     public CamaraController camaraController;
@@ -204,6 +206,7 @@ public class PlayerAgent : Agent
 
     public void OnTriggerExit(Collider other)
     {
+        //Debug.Log("Saliendo de: " + other.name);
         if (other.CompareTag("Puerta"))
         {
             // Solo cerrar puertas si ya avanzó al menos al nivel 2
@@ -216,12 +219,9 @@ public class PlayerAgent : Agent
                 }
                 else if (currentDoorIndex > 1)
                 {
-                    // Cerrar la puerta visualmente
-                    Door doorScript = other.GetComponent<Door>();
-                    if (doorScript != null)
-                    {
-                        doorScript.CloseDoor();
-                    }
+                    Debug.Log("Nuemero puertas: " + currentDoorIndex);
+                    Debug.Log("Nuemero puerta: " + puertas[currentDoorIndex - 2]);
+                    puertas[currentDoorIndex - 2].GetComponentInChildren<Door>().CloseDoor();
                 }
             }
         }
