@@ -83,6 +83,35 @@ public class FullGameManager : NetworkBehaviour
     [Rpc(SendTo.Server)]
     public void SelectPlayerRpc(ulong clientId, int playerType)
     {
+        // Verifica si ya existe el tipo solicitado por otro jugador
+        bool requestedTypeTaken = false;
+
+        foreach (var player in playerDataList)
+        {
+            if (player.playerType == playerType && player.clientId != clientId)
+            {
+                requestedTypeTaken = true;
+                break;
+            }
+        }
+
+        if (requestedTypeTaken)
+        {
+            // Alternar tipo entre 0 y 1
+            playerType = playerType == 0 ? 1 : 0;
+
+            // Verificar si el alternativo también está ocupado
+            foreach (var player in playerDataList)
+            {
+                if (player.playerType == playerType && player.clientId != clientId)
+                {
+                    Debug.LogWarning($"Ambos tipos están ocupados. Cliente {clientId} no puede seleccionar un tipo.");
+                    return; // No asignar nada
+                }
+            }
+        }
+
+        // Actualiza si ya existe
         for (int i = 0; i < playerDataList.Count; i++)
         {
             if (playerDataList[i].clientId == clientId)
@@ -91,6 +120,8 @@ public class FullGameManager : NetworkBehaviour
                 return;
             }
         }
+
+        // Agrega nuevo jugador
         playerDataList.Add(new PlayerData(clientId, playerType, false));
 
     }
