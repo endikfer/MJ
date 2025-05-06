@@ -9,7 +9,11 @@ public class PlayerAgent : Agent
 {
     public bool useVectorObs;
 
+    private readonly float[] maxExpectedDistances = new float[] { 7.88f, 20.55f, 31.42f, 40.68f };
+
     private bool canJump = false;
+    private bool isOffButton = false;
+    private bool hasJumped = false;
 
     private int currentLevel = 1;
     private int successStreak = 0;
@@ -78,10 +82,22 @@ public class PlayerAgent : Agent
                 {
                     var rb = GetComponent<Rigidbody>();
                     rb.AddForce(Vector3.up * 80f, ForceMode.Impulse);
+                    hasJumped = true;
                 }
                 break;
         }
         transform.position += dirToGo * Time.deltaTime;
+
+        if (isOffButton && hasJumped)
+        {
+            AddReward(-0.5f);  // Penalización por aterrizar en algo que no es un botón
+            isOffButton = false;  // Resetear la variable
+        }
+
+        PenalizeByDistanceToGoal();
+
+        // Penalización leve por cada paso para fomentar rapidez
+        AddReward(-0.0005f);
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -151,6 +167,8 @@ public class PlayerAgent : Agent
     // Puedes usar este método cuando detectes que el agente completó el objetivo correctamente
     public void RegisterSuccess()
     {
+        AddReward(1.0f);
+
         successStreak++;
 
         if (successStreak >= successesRequired)
@@ -164,6 +182,7 @@ public class PlayerAgent : Agent
             else
             {
                 Debug.Log("¡Has completado todos los niveles!");
+                AddReward(2.0f);
             }
         }
 
@@ -173,6 +192,7 @@ public class PlayerAgent : Agent
     // Si el agente falla o no termina en MaxStep, llamas a esto
     public void RegisterFailure()
     {
+        AddReward(-1.0f);
         successStreak = 0;
         currentLevel = 1;
         EndEpisode();
@@ -218,8 +238,6 @@ public class PlayerAgent : Agent
                 }
                 else if (currentDoorIndex > 1)
                 {
-                    Debug.Log("Nuemero puertas: " + currentDoorIndex);
-                    Debug.Log("Nuemero puerta: " + puertas[currentDoorIndex - 2]);
                     puertas[currentDoorIndex - 2].GetComponentInChildren<Door>().CloseDoor();
                 }
             }
@@ -228,19 +246,33 @@ public class PlayerAgent : Agent
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Jump"))
+        if (collision.gameObject.CompareTag("Jump") || collision.gameObject.CompareTag("Buton"))
         {
             canJump = true;
+        }
+
+        if (!collision.gameObject.CompareTag("Buton") && hasJumped)
+        {
+            isOffButton = true;  // Aterrizó en algo que no es un botón
         }
     }
 
     void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Jump"))
+        if (collision.gameObject.CompareTag("Jump") || collision.gameObject.CompareTag("Buton"))
         {
             canJump = false;
         }
     }
 
-
+    private void PenalizeByDistanceToGoal()
+    {
+        if (levelTargets.Length >= currentLevel)
+        {
+            float distance = Vector3.Distance(transform.position, levelTargets[currentLevel - 1].position);
+            float maxExpectedDistance = maxExpectedDistances[currentLevel - 1];
+            float normalizedPenalty = Mathf.Clamp01(distance / maxExpectedDistance);
+            AddReward(-normalizedPenalty * 0.005f);
+        }
+    }
 }
