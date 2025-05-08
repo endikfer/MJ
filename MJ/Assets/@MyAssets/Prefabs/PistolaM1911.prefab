@@ -98,13 +98,12 @@ GameObject:
   m_Component:
   - component: {fileID: 2359812229109309824}
   - component: {fileID: 1390009248617055796}
-  - component: {fileID: 6301966368768223123}
   - component: {fileID: 2260989060675383328}
+  - component: {fileID: 6301966368768223123}
   - component: {fileID: 4610035966081924348}
-  - component: {fileID: 6539241336411766417}
-  - component: {fileID: 3733833842102064386}
+  - component: {fileID: -4497777611307388320}
+  - component: {fileID: -3838272523088763582}
   - component: {fileID: 1919415819652611191}
-  - component: {fileID: 5447599680738494998}
   m_Layer: 0
   m_Name: PistolaM1911
   m_TagString: Untagged
@@ -156,6 +155,27 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &2260989060675383328
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2353168005439324564}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.1, y: 0.2, z: 0.3}
+  m_Center: {x: 0, y: -0.01, z: -0.01}
 --- !u!114 &6301966368768223123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -308,27 +328,6 @@ MonoBehaviour:
   m_StartingSingleGrabTransformers: []
   m_StartingMultipleGrabTransformers: []
   m_AddDefaultGrabTransformers: 1
---- !u!65 &2260989060675383328
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2353168005439324564}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.1, y: 0.2, z: 0.3}
-  m_Center: {x: 0, y: -0.01, z: -0.01}
 --- !u!114 &4610035966081924348
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -348,9 +347,9 @@ MonoBehaviour:
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 1
   SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
+  DontDestroyWithOwner: 1
   AutoObjectParentSync: 1
---- !u!114 &6539241336411766417
+--- !u!114 &-4497777611307388320
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -359,7 +358,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2353168005439324564}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Script: {fileID: 11500000, guid: df2868252ab5c4d1da357e8f11f1b524, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   UseUnreliableDeltas: 0
@@ -381,7 +380,7 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &3733833842102064386
+--- !u!114 &-3838272523088763582
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -390,9 +389,47 @@ MonoBehaviour:
   m_GameObject: {fileID: 2353168005439324564}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47286f5ec1f57114884cb3adf620452f, type: 3}
+  m_Script: {fileID: 11500000, guid: b26847696b97af64a9e40c1aafdb29ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_AllowOverrideOwnership: 1
+  m_InteractionCheckTime: 2
+  m_IgnoreSocketSelectedCallback: 1
+  m_ResetObjectOnDisconnect: 1
+  m_RelinquishOwnershipAfterTime: 0
+  m_RelinquishOwnershipTime: 5
+  m_UseInteractingChangedEvent: 0
+  OnInteractingChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_SyncHover: 0
+  m_UseHoverEvents: 0
+  HoverNetworkedEventServer:
+    m_PersistentCalls:
+      m_Calls: []
+  HoverNetworkedEventAll:
+    m_PersistentCalls:
+      m_Calls: []
+  m_SyncSelect: 1
+  m_UseSelectEvents: 0
+  SelectNetworkedEventServer:
+    m_PersistentCalls:
+      m_Calls: []
+  SelectNetworkedEventAll:
+    m_PersistentCalls:
+      m_Calls: []
+  m_SyncActivate: 1
+  m_UseActivateEvents: 0
+  ActivateNetworkedEventServer:
+    m_PersistentCalls:
+      m_Calls: []
+  ActivateNetworkedEventAll:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FoldoutValues: 010101
+  m_AllowCollisionOwnershipExchange: 0
+  m_MinExchangeVelocityMagitude: 0.025
+  spawnLocked: 0
 --- !u!114 &1919415819652611191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -409,18 +446,6 @@ MonoBehaviour:
     type: 3}
   firePoint: {fileID: 1113294279107213595}
   fireRate: 0.5
---- !u!114 &5447599680738494998
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2353168005439324564}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2353238119857424906
 GameObject:
   m_ObjectHideFlags: 0

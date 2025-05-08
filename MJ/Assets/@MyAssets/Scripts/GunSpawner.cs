@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
+using XRMultiplayer;
 
 public class GunSpawner : NetworkBehaviour
 {
@@ -16,12 +17,27 @@ public class GunSpawner : NetworkBehaviour
     private void SpawnGunForClient(ulong clientId)
     {
         GameObject gun = Instantiate(gunPrefab, GetSpawnPosition(clientId), Quaternion.identity);
-        var networkObject = gun.GetComponent<NetworkObject>();
-        networkObject.SpawnWithOwnership(clientId);
+        NetworkObject netObj = gun.GetComponent<NetworkObject>();
+
+        netObj.SpawnWithOwnership(clientId);
+
+        netObj.DontDestroyWithOwner = true;
+
+        if (gun.TryGetComponent<NetworkPhysicsInteractable>(out var interactable))
+        {
+            interactable.spawnLocked = false;
+        }
     }
 
     private Vector3 GetSpawnPosition(ulong clientId)
     {
-        return new Vector3(0, 1, 0);
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
+        {
+            if (client.PlayerObject != null)
+            {
+                return client.PlayerObject.transform.position + Vector3.forward * 1.5f;
+            }
+        }
+        return new Vector3(-1 + (int)clientId, 1, 0);
     }
 }

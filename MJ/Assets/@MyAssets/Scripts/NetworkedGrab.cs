@@ -21,6 +21,7 @@ public class NetworkedGrab : NetworkBehaviour
 
     private void OnGrab(SelectEnterEventArgs args)
     {
+        Debug.Log($"[NetworkedGrab] Grab triggered by {NetworkManager.Singleton.LocalClientId}");
         if (args.interactorObject is XRBaseInteractor interactor)
         {
             var root = interactor.transform.root;
@@ -53,10 +54,7 @@ public class NetworkedGrab : NetworkBehaviour
     [ClientRpc]
     private void SetKinematicClientRpc(bool isKinematic)
     {
-        if(IsOwner)
-        {
-            rb.isKinematic = isKinematic;
-        }
+        rb.isKinematic = isKinematic;        
     }
 
     [ServerRpc]
