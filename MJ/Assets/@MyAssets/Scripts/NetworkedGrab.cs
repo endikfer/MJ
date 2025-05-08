@@ -60,8 +60,8 @@ public class NetworkedGrab : NetworkBehaviour
     }
 
     [ServerRpc]
-    private static void ReleaseOwnershipServerRpc()
+    private void ReleaseOwnershipServerRpc()
     {
-        GetComponent<NetworkObject>().RemoveOwnership();
+        NetworkObject.RemoveOwnership();
     }
 }
