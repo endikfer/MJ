@@ -58,20 +58,20 @@ public class PlayerAgent : Agent
         switch (actionMove)
         {
             case 1:
-                dirToGo = transform.forward * 1f;
+                dirToGo = transform.forward * 4f;
                 break;
             case 2:
-                dirToGo = transform.forward * -1f;
+                dirToGo = transform.forward * -4f;
                 break;
         }
 
         switch (actionRotate)
         {
             case 1:
-                transform.Rotate(Vector3.up * -1f);
+                transform.Rotate(Vector3.up * -4f);
                 break;
             case 2:
-                transform.Rotate(Vector3.up * 1f);
+                transform.Rotate(Vector3.up * 4f);
                 break;
         }
 
@@ -272,6 +272,11 @@ public class PlayerAgent : Agent
             float distance = Vector3.Distance(transform.position, levelTargets[currentLevel - 1].position);
             float maxExpectedDistance = maxExpectedDistances[currentLevel - 1];
             float normalizedPenalty = Mathf.Clamp01(distance / maxExpectedDistance);
+
+
+            //debug log. 
+
+            Debug.Log(-normalizedPenalty * 0.005f);
             AddReward(-normalizedPenalty * 0.005f);
         }
     }
