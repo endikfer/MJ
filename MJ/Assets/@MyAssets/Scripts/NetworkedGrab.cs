@@ -15,15 +15,14 @@ public class NetworkedGrab : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if (IsServer)
-        {
-            grab.selectEntered.AddListener(OnGrab);
-            grab.selectExited.AddListener(OnRelease);
-        }
+        // Asegúrate de que los listeners se agreguen en todos los clientes
+        grab.selectEntered.AddListener(OnGrab);
+        grab.selectExited.AddListener(OnRelease);
     }
 
     private void OnGrab(SelectEnterEventArgs args)
     {
+        Debug.Log("OnGrab called");
         if (args.interactorObject is XRBaseInteractor interactor)
         {
             var root = interactor.transform.root;
@@ -31,7 +30,8 @@ public class NetworkedGrab : NetworkBehaviour
 
             if (playerNetObj != null)
             {
-                GetComponent<NetworkObject>().ChangeOwnership(playerNetObj.OwnerClientId);
+                Debug.Log("Requesting ownership");
+                RequestOwnershipServerRpc(playerNetObj.OwnerClientId);
                 SetKinematicClientRpc(true);
             }
         }
@@ -39,15 +39,23 @@ public class NetworkedGrab : NetworkBehaviour
 
     private void OnRelease(SelectExitEventArgs args)
     {
+        Debug.Log("OnRelease called");
         SetKinematicClientRpc(false);
     }
 
-    [ClientRpc]
-    void SetKinematicClientRpc(bool isKinematic)
+    [ServerRpc]
+    private void RequestOwnershipServerRpc(ulong newOwnerClientId)
     {
-        if (!IsOwner)
-        {
-            rb.isKinematic = isKinematic;
-        }
+        Debug.Log("RequestOwnershipServerRpc called");
+        // Cambia la propiedad del objeto en el servidor
+        GetComponent<NetworkObject>().ChangeOwnership(newOwnerClientId);
+    }
+
+    [ClientRpc]
+    private void SetKinematicClientRpc(bool isKinematic)
+    {
+        Debug.Log("SetKinematicClientRpc called");
+        // Aplica el cambio de cinemática en todos los clientes
+        rb.isKinematic = isKinematic;
     }
 }

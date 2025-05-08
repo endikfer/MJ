@@ -104,6 +104,7 @@ GameObject:
   - component: {fileID: 6539241336411766417}
   - component: {fileID: 3733833842102064386}
   - component: {fileID: 1919415819652611191}
+  - component: {fileID: 5447599680738494998}
   m_Layer: 0
   m_Name: PistolaM1911
   m_TagString: Untagged
@@ -340,7 +341,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2255183933
+  GlobalObjectIdHash: 52246688
   InScenePlacedSourceGlobalObjectIdHash: 4288295398
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -407,7 +408,19 @@ MonoBehaviour:
   bulletPrefab: {fileID: 5178155969580373748, guid: e50fcf2bdfb099f41bab77127d4e0bad,
     type: 3}
   firePoint: {fileID: 1113294279107213595}
-  fireRate: 0.3
+  fireRate: 0.5
+--- !u!114 &5447599680738494998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2353168005439324564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2353238119857424906
 GameObject:
   m_ObjectHideFlags: 0
