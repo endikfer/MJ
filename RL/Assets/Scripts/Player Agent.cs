@@ -90,14 +90,14 @@ public class PlayerAgent : Agent
 
         if (isOffButton && hasJumped)
         {
-            AddReward(-0.5f);  // Penalización por aterrizar en algo que no es un botón
+            //AddReward(-0.5f);  // Penalización por aterrizar en algo que no es un botón
             isOffButton = false;  // Resetear la variable
         }
 
         PenalizeByDistanceToGoal();
 
         // Penalización leve por cada paso para fomentar rapidez
-        AddReward(-0.0005f);
+        //AddReward(-0.0005f);
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -167,7 +167,7 @@ public class PlayerAgent : Agent
     // Puedes usar este método cuando detectes que el agente completó el objetivo correctamente
     public void RegisterSuccess()
     {
-        AddReward(1.0f);
+        AddReward(5.0f);
 
         successStreak++;
 
@@ -182,7 +182,7 @@ public class PlayerAgent : Agent
             else
             {
                 Debug.Log("¡Has completado todos los niveles!");
-                AddReward(2.0f);
+                AddReward(20.0f);
             }
         }
 
