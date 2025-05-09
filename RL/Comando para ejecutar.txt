@@ -1,1 +1,1 @@
-mlagents-learn --run id=(nombre) (nombreyml).yml
+mlagents-learn --run id=(nombre) (nombreyml).yaml
