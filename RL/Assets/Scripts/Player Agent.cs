@@ -80,13 +80,14 @@ public class PlayerAgent : Agent
             case 1:
                 if (canJump)
                 {
-                    var rb = GetComponent<Rigidbody>();
-                    rb.AddForce(Vector3.up * 80f, ForceMode.Impulse);
+                    rb = GetComponent<Rigidbody>();
+                    rb.AddForce(Vector3.up * 45f, ForceMode.Impulse);
                     hasJumped = true;
                 }
                 break;
         }
-        transform.position += dirToGo * Time.deltaTime;
+        Vector3 targetPosition = rb.position + dirToGo * Time.deltaTime;
+        rb.MovePosition(targetPosition);
 
         if (isOffButton && hasJumped)
         {
