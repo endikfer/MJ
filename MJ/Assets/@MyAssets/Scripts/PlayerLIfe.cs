@@ -58,4 +58,11 @@ public class PlayerLIfe : MonoBehaviour
             Heal(10);
         }
     }
+
+    [ClientRpc]
+    void UpdateHealthClientRpc(int newHealth)
+    {
+        // Si usas una barra de vida visual, actualízala aquí
+        Debug.Log("Vida actualizada a " + newHealth);
+    }
 }

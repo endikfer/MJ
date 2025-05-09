@@ -24,7 +24,7 @@ public class HealingSpawner : NetworkBehaviour
         if (IsServer)
         {
             Debug.Log("Soy el host, arranco el spawn");
-            StartCoroutine(SpawnFirstAfterDelay(5f));
+            StartCoroutine(SpawnFirstAfterDelay(10f));
         }
     }
 
@@ -44,6 +44,8 @@ public class HealingSpawner : NetworkBehaviour
         NetworkObject netObj = item.GetComponent<NetworkObject>();
         netObj.Spawn();
 
+        NotifyClientHealingSpawnedClientRpc(spawnPoints[index].position);
+
         currentHealingItem = item;
     }
 
@@ -61,5 +63,11 @@ public class HealingSpawner : NetworkBehaviour
     {
         yield return new WaitForSeconds(delay);
         SpawnHealingItem();
+    }
+
+    [ClientRpc]
+    void NotifyClientHealingSpawnedClientRpc(Vector3 position)
+    {
+        Debug.Log("¡Cliente recibió notificación de spawn en: " + position + "!");
     }
 }
