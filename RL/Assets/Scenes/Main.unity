@@ -2544,7 +2544,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3903780356075158532, guid: 12a6dbff870816c48b8fc7826c63bf34, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 19.162
+      value: 19.39
       objectReference: {fileID: 0}
     - target: {fileID: 3903780356075158532, guid: 12a6dbff870816c48b8fc7826c63bf34, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2671,7 +2671,7 @@ MonoBehaviour:
     hasUpgradedBrainParametersWithActionSpec: 1
   m_Model: {fileID: 0}
   m_InferenceDevice: 0
-  m_BehaviorType: 1
+  m_BehaviorType: 0
   m_BehaviorName: Player
   TeamId: 0
   m_UseChildSensors: 1

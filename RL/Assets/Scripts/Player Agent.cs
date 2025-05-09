@@ -90,14 +90,11 @@ public class PlayerAgent : Agent
 
         if (isOffButton && hasJumped)
         {
-            //AddReward(-0.5f);  // Penalización por aterrizar en algo que no es un botón
             isOffButton = false;  // Resetear la variable
         }
 
         PenalizeByDistanceToGoal();
 
-        // Penalización leve por cada paso para fomentar rapidez
-        //AddReward(-0.0005f);
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -198,36 +195,41 @@ public class PlayerAgent : Agent
         EndEpisode();
     }
 
-    public void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Puerta"))
-        {
-            int doorsPerLevel = currentLevel; // Nivel 2 = 2 puertas, nivel 3 = 3 puertas...
-
-            currentDoorIndex++;
-
-            if (currentDoorIndex < doorsPerLevel)
-            {
-                // Cambiar cámara a la siguiente posición
-                int camIndex = Mathf.Min(currentDoorIndex, newCameraPositions.Length - 1);
-                if (camaraController != null)
-                {
-                    camaraController.MoveToPosition(newCameraPositions[camIndex].position);
-                }
-            }
-            else
-            {
-                // Última puerta -> éxito
-                RegisterSuccess();
-            }
-        }
-    }
-
     public void OnTriggerExit(Collider other)
     {
-        //Debug.Log("Saliendo de: " + other.name);
         if (other.CompareTag("Puerta"))
         {
+            Vector3 doorPosition = other.transform.position;
+            Vector3 agentPosition = transform.position;
+
+            float direction = agentPosition.x - doorPosition.x;
+
+            // Avance correcto si el agente se está moviendo hacia una menor X (hacia la siguiente puerta/nivel)
+            bool isCorrectDirection = direction < 0;
+
+            int doorsPerLevel = currentLevel;
+
+            if (isCorrectDirection)
+            {
+                currentDoorIndex++;
+
+                if (currentDoorIndex < doorsPerLevel)
+                {
+                    // Cambiar cámara a la siguiente posición
+                    int camIndex = Mathf.Min(currentDoorIndex, newCameraPositions.Length - 1);
+                    if (camaraController != null)
+                    {
+                        camaraController.MoveToPosition(newCameraPositions[camIndex].position);
+                    }
+                }
+                else
+                {
+                    // Última puerta -> éxito
+                    RegisterSuccess();
+                }
+            }
+
+
             // Solo cerrar puertas si ya avanzó al menos al nivel 2
             if (currentLevel > 1)
             {
