@@ -12,8 +12,6 @@ public class PlayerAgent : Agent
     private readonly float[] maxExpectedDistances = new float[] { 7.88f, 20.55f, 31.42f, 40.68f };
 
     private bool canJump = false;
-    private bool isOffButton = false;
-    private bool hasJumped = false;
 
     private int currentLevel = 1;
     private int successStreak = 0;
@@ -81,18 +79,12 @@ public class PlayerAgent : Agent
                 if (canJump)
                 {
                     rb = GetComponent<Rigidbody>();
-                    rb.AddForce(Vector3.up * 45f, ForceMode.Impulse);
-                    hasJumped = true;
+                    rb.AddForce(Vector3.up * 80f, ForceMode.Impulse);
                 }
                 break;
         }
         Vector3 targetPosition = rb.position + dirToGo * Time.deltaTime;
         rb.MovePosition(targetPosition);
-
-        if (isOffButton && hasJumped)
-        {
-            isOffButton = false;  // Resetear la variable
-        }
 
         PenalizeByDistanceToGoal();
 
@@ -252,11 +244,6 @@ public class PlayerAgent : Agent
         if (collision.gameObject.CompareTag("Jump") || collision.gameObject.CompareTag("Buton"))
         {
             canJump = true;
-        }
-
-        if (!collision.gameObject.CompareTag("Buton") && hasJumped)
-        {
-            isOffButton = true;  // Aterrizó en algo que no es un botón
         }
     }
 
