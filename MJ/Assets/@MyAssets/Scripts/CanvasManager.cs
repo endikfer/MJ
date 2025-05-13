@@ -1,28 +1,54 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Unity.Netcode;
 
 public class CanvasManager : MonoBehaviour
 {
-    public Slider healthSlider; // Referencia al slider de vida
-    public PlayerLIfe player;   // Referencia al script del jugador
-    public TextMeshProUGUI healthText; // Referencia al texto TMP
-    public Image fillImage; // Referencia al componente Image del Fill del slider
+    public Slider healthSlider;
+    public TextMeshProUGUI healthText;
+    public Image fillImage;
+
+    private PlayerLIfe player;
+    private bool playerFound = false;
 
     void Start()
     {
-        if (player != null && healthSlider != null)
+        StartCoroutine(FindLocalPlayer());
+    }
+
+    IEnumerator FindLocalPlayer()
+    {
+        while (!playerFound)
         {
-            healthSlider.maxValue = player.maxHealth;
-            healthSlider.value = player.maxHealth;
+            PlayerLIfe[] allPlayers = FindObjectsOfType<PlayerLIfe>();
+            foreach (var pl in allPlayers)
+            {
+                if (pl.IsOwner) // Solo el jugador local
+                {
+                    player = pl;
+                    playerFound = true;
+
+                    if (healthSlider != null)
+                    {
+                        healthSlider.maxValue = player.maxHealth;
+                        healthSlider.value = player.maxHealth;
+                    }
+
+                    break;
+                }
+            }
+
+            yield return new WaitForSeconds(0.2f);
         }
     }
 
     void Update()
     {
-        if (player != null && healthSlider != null)
+        if (playerFound && player != null)
         {
             float currentHealth = player.GetCurrentHealth();
             healthSlider.value = currentHealth;

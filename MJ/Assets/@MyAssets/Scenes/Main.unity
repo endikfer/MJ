@@ -7219,7 +7219,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthSlider: {fileID: 1506048655}
-  player: {fileID: 1628709571}
   healthText: {fileID: 1444410306}
   fillImage: {fileID: 142956155}
 --- !u!4 &1558183430
@@ -7330,7 +7329,6 @@ GameObject:
   - component: {fileID: 1628709568}
   - component: {fileID: 1628709570}
   - component: {fileID: 1628709569}
-  - component: {fileID: 1628709571}
   m_Layer: 0
   m_Name: XR Origin (XR Rig)
   m_TagString: Player
@@ -7443,21 +7441,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1628709571
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1628709564}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1191071ac8d42c74a86c95e5aee4c31f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 100
-  animator: {fileID: -2375965019883794078, guid: 5f9364cfdc08f3d408738ef2a04380b8,
-    type: 3}
 --- !u!1 &1719066635
 GameObject:
   m_ObjectHideFlags: 0

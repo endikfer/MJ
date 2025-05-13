@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerLIfe : MonoBehaviour
+public class PlayerLIfe : NetworkBehaviour
 {
     public float maxHealth = 100f;
     private float currentHealth;
@@ -26,14 +26,14 @@ public class PlayerLIfe : MonoBehaviour
 
     public void Heal(float amount)
     {
+        currentHealth += amount;
         if (currentHealth > maxHealth)
-        {
-            currentHealth += amount;
-        }
-        if(currentHealth <= maxHealth)
         {
             currentHealth = maxHealth;
         }
+
+        // Notifica a todos los clientes que actualicen su valor local de vida
+        UpdateHealthClientRpc(currentHealth);
     }
 
     public void Die()
@@ -60,9 +60,11 @@ public class PlayerLIfe : MonoBehaviour
     }
 
     [ClientRpc]
-    void UpdateHealthClientRpc(int newHealth)
+    void UpdateHealthClientRpc(float newHealth)
     {
-        // Si usas una barra de vida visual, actualízala aquí
-        Debug.Log("Vida actualizada a " + newHealth);
+        currentHealth = newHealth;
+
+        // Aquí puedes actualizar UI si tienes barra de vida
+        Debug.Log($"[CLIENT RPC] Nueva vida: {currentHealth}");
     }
 }

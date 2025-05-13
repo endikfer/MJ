@@ -12,10 +12,15 @@ public class HealingItem : NetworkBehaviour
 
         if (other.CompareTag("Player"))
         {
-            PlayerLIfe vida = other.GetComponent<PlayerLIfe>();
-            if (vida != null)
+            Debug.Log("Entró: " + other.name + " | IsServer: " + IsServer + " | IsHost: " + NetworkManager.Singleton.IsHost);
+            PlayerLIfe vida = other.GetComponent<PlayerLIfe>() ?? other.GetComponentInParent<PlayerLIfe>();
+            if (vida == null)
             {
-                vida.Heal(healAmount); // opcional: podrías hacer esto con RPC si el jugador no es host
+                Debug.LogWarning("No se encontró PlayerLife en " + other.name + " ni en sus padres.");
+            }
+            else
+            {
+                Debug.Log("Se encontró PlayerLife en " + vida.gameObject.name);
             }
 
             HealingSpawner.Instance.OnHealingItemCollected();

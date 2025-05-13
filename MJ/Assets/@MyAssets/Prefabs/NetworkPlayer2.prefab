@@ -141,6 +141,8 @@ GameObject:
   - component: {fileID: -8104628027428363021}
   - component: {fileID: -2375965019883794078}
   - component: {fileID: 2206181917825832723}
+  - component: {fileID: 1640325555297430673}
+  - component: {fileID: 648595262675595903}
   m_Layer: 0
   m_Name: NetworkPlayer2
   m_TagString: Player
@@ -286,6 +288,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TransitionStateInfoList: []
   m_Animator: {fileID: -8104628027428363021}
+--- !u!114 &1640325555297430673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6650292811616477708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1191071ac8d42c74a86c95e5aee4c31f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  animator: {fileID: 0}
+--- !u!65 &648595262675595903
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6650292811616477708}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.49599683, y: 1.7897582, z: 0.46082592}
+  m_Center: {x: 0.0016894937, y: 0.17326403, z: -0.03686285}
 --- !u!1 &8803206943440241050
 GameObject:
   m_ObjectHideFlags: 0
@@ -455,7 +492,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 0.485893, y: 1.7624006, z: 0.44545078}
   m_Center: {x: -0.009783626, y: 0.90584826, z: -0.0018153191}
