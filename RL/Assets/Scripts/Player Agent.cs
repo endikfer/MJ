@@ -17,11 +17,17 @@ public class PlayerAgent : Agent
     private int successStreak = 0;
     private int totalLevels = 4;
     public int successesRequired = 10;
+    public bool button = false;
 
     public Transform levelStartPosition;
     public Transform[] levelTargets;
 
     public GameObject[] puertas;
+
+    public GameObject boton1;
+    public GameObject boton2;
+    public GameObject boton3;
+    public GameObject boton4;
 
     public Rigidbody rb;
 
@@ -36,6 +42,13 @@ public class PlayerAgent : Agent
         {
             sensor.AddObservation(StepCount / (float)MaxStep);
         }
+
+        sensor.AddObservation(transform.position);
+        sensor.AddObservation(boton1.transform.position);
+        sensor.AddObservation(boton2.transform.position);
+        sensor.AddObservation(boton3.transform.position);
+        sensor.AddObservation(boton4.transform.position);
+        sensor.AddObservation(Vector3.Distance(transform.position, levelTargets[currentDoorIndex].position ));
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
@@ -157,7 +170,7 @@ public class PlayerAgent : Agent
     // Puedes usar este método cuando detectes que el agente completó el objetivo correctamente
     public void RegisterSuccess()
     {
-        AddReward(5.0f);
+        AddReward(50.0f);
 
         successStreak++;
 
@@ -172,7 +185,7 @@ public class PlayerAgent : Agent
             else
             {
                 Debug.Log("¡Has completado todos los niveles!");
-                AddReward(20.0f);
+                AddReward(200.0f);
             }
         }
 
@@ -220,6 +233,14 @@ public class PlayerAgent : Agent
                     // Última puerta -> éxito
                     RegisterSuccess();
                 }
+                if (currentDoorIndex == 2)
+                {
+                    Debug.LogWarning("Puerta 3 atravesada.");
+                }
+                else if (currentDoorIndex == 3)
+                {
+                    Debug.LogError("Puerta 4 atravesada.");
+                }
             }
 
 
@@ -245,6 +266,11 @@ public class PlayerAgent : Agent
         {
             canJump = true;
         }
+        if (collision.gameObject.CompareTag("Buton") && button == true)
+        {
+            button = false;
+            AddReward(5.0f);
+        }
     }
 
     void OnCollisionExit(Collision collision)
@@ -259,15 +285,15 @@ public class PlayerAgent : Agent
     {
         if (levelTargets.Length >= currentLevel)
         {
-            float distance = Vector3.Distance(transform.position, levelTargets[currentLevel - 1].position);
-            float maxExpectedDistance = maxExpectedDistances[currentLevel - 1];
+            float distance = Vector3.Distance(transform.position, levelTargets[4].position);
+            float maxExpectedDistance = 40.68f;
             float normalizedPenalty = Mathf.Clamp01(distance / maxExpectedDistance);
 
 
             //debug log. 
 
-            Debug.Log(-normalizedPenalty * 0.005f);
-            AddReward(-normalizedPenalty * 0.005f);
+            Debug.Log(-normalizedPenalty * 0.5f);
+            AddReward(-normalizedPenalty * 0.5f);
         }
     }
 }

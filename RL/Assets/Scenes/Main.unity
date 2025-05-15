@@ -934,6 +934,11 @@ Transform:
   - {fileID: 847658107}
   m_Father: {fileID: 1454793164}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &835515241 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6666938705244941386, guid: 6624d16679a7bb74dacf45dd149d44e5, type: 3}
+  m_PrefabInstance: {fileID: 1321536125}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &837853623
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1826,6 +1831,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 993640166}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1280673115 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6666938705244941386, guid: 6624d16679a7bb74dacf45dd149d44e5, type: 3}
+  m_PrefabInstance: {fileID: 1100415787}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1321536125
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2053,6 +2063,11 @@ PrefabInstance:
       addedObject: {fileID: 1740029485}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a2ef907af108c29458a5048e69d86d54, type: 3}
+--- !u!1 &1423576236 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6666938705244941386, guid: 6624d16679a7bb74dacf45dd149d44e5, type: 3}
+  m_PrefabInstance: {fileID: 1195379027}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1454793163
 GameObject:
   m_ObjectHideFlags: 0
@@ -2510,6 +2525,11 @@ Transform:
   - {fileID: 693850433}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1968579641 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6666938705244941386, guid: 6624d16679a7bb74dacf45dd149d44e5, type: 3}
+  m_PrefabInstance: {fileID: 1105143807}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1990203143 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2193103868508165422, guid: a2ef907af108c29458a5048e69d86d54, type: 3}
@@ -2809,8 +2829,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 1
-    NumStackedVectorObservations: 1
+    VectorObservationSize: 17
+    NumStackedVectorObservations: 5
     m_ActionSpec:
       m_NumContinuousActions: 0
       BranchSizes: 030000000300000002000000
@@ -2868,9 +2888,10 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 1500
+  MaxStep: 1000
   useVectorObs: 1
-  successesRequired: 1
+  successesRequired: 10
+  button: 0
   levelStartPosition: {fileID: 693850433}
   levelTargets:
   - {fileID: 336976625}
@@ -2883,6 +2904,10 @@ MonoBehaviour:
   - {fileID: 1033897270}
   - {fileID: 1857196269}
   - {fileID: 173615024}
+  boton1: {fileID: 1423576236}
+  boton2: {fileID: 835515241}
+  boton3: {fileID: 1280673115}
+  boton4: {fileID: 1968579641}
   rb: {fileID: 1318795322479187657}
   camaraController: {fileID: 963194229}
   newCameraPositions:
