@@ -10,17 +10,31 @@ public class GunSpawner : NetworkBehaviour
     {
         if (IsServer)
         {
+            Debug.Log($"[GunSpawner] Spawning gun for client {OwnerClientId}");
             SpawnGunForClient(OwnerClientId);
         }
     }
 
     private void SpawnGunForClient(ulong clientId)
     {
+        Debug.Log($"[GunSpawner] Instantiating gunPrefab for client {clientId}");
+
+        if (gunPrefab == null)
+        {
+            Debug.LogError("[GunSpawner] gunPrefab is NULL!");
+            return;
+        }
+
         GameObject gun = Instantiate(gunPrefab, GetSpawnPosition(clientId), Quaternion.identity);
         NetworkObject netObj = gun.GetComponent<NetworkObject>();
 
-        netObj.SpawnWithOwnership(clientId);
+        if (netObj == null)
+        {
+            Debug.LogError("[GunSpawner] Missing NetworkObject on gunPrefab!");
+            return;
+        }
 
+        netObj.SpawnWithOwnership(clientId);
         netObj.DontDestroyWithOwner = true;
 
         if (gun.TryGetComponent<NetworkPhysicsInteractable>(out var interactable))

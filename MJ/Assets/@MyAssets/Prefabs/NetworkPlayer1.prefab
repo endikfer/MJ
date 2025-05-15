@@ -143,6 +143,7 @@ GameObject:
   - component: {fileID: 513798283082310896}
   - component: {fileID: 5558123769142417243}
   - component: {fileID: 7959492667109483168}
+  - component: {fileID: -846649098097473486}
   m_Layer: 0
   m_Name: NetworkPlayer1
   m_TagString: Player
@@ -181,7 +182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1841016511
+  GlobalObjectIdHash: 3750144375
   InScenePlacedSourceGlobalObjectIdHash: 3750144375
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -323,6 +324,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.49599683, y: 1.7547476, z: 0.46082592}
   m_Center: {x: 0.0016894937, y: 0.18219936, z: -0.03686285}
+--- !u!114 &-846649098097473486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6650292811616477708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad8deae8091111f4eb30a56c1f4e0d3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransitionStateInfoList: []
+  m_Animator: {fileID: -4186532379062240006}
 --- !u!1 &8803206943440241050
 GameObject:
   m_ObjectHideFlags: 0
@@ -394,6 +409,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3397436359494212816}
     m_Modifications:
+    - target: {fileID: 3456312130320105590, guid: 2d00fb9968798574e93a167f79f4d5aa,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8240661434394411190, guid: 2d00fb9968798574e93a167f79f4d5aa,
         type: 3}
       propertyPath: m_Name

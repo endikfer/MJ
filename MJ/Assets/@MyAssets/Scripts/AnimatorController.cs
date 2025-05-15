@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -9,7 +9,7 @@ public class AnimatorController : NetworkBehaviour
     private Animator animator;
     private CharacterController xrCharacterController;
 
-    public string xrOriginName = "XR Origin"; // asegúrate de que se llame así
+    public string xrOriginName = "XR Origin"; // asegÃºrate de que se llame asÃ­
     private NetworkAnimator networkAnimator;
 
     public bool isDead = false;
@@ -20,6 +20,16 @@ public class AnimatorController : NetworkBehaviour
 
         animator = GetComponent<Animator>();
         networkAnimator = GetComponent<NetworkAnimator>();
+
+        // VERIFICACIONES EXTRA
+        if (animator == null)
+        {
+            Debug.LogError("Animator no encontrado en el jugador.");
+        }
+        else if (animator.runtimeAnimatorController == null)
+        {
+            Debug.LogError("Animator Controller no asignado al Animator.");
+        }
 
         if (networkAnimator == null)
         {
@@ -38,6 +48,7 @@ public class AnimatorController : NetworkBehaviour
             Debug.LogWarning("CharacterController no encontrado en XR Origin.");
         }
     }
+
 
     void Update()
     {

@@ -262,6 +262,7 @@ namespace XRMultiplayer
                 m_RequestingOwnership = false;
                 m_ClientNetworkTransform.enabled = true;
                 m_IsInteracting.Value = baseInteractable.isSelected;
+                m_LockedOnSpawn.Value = false;
                 if (!baseInteractable.isSelected & !m_Rigidbody.isKinematic)
                 {
                     m_Rigidbody.velocity = m_AverageVelocity;
