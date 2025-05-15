@@ -1317,6 +1317,7 @@ GameObject:
   - component: {fileID: 5097065863656379966}
   - component: {fileID: 9143951340722833682}
   - component: {fileID: -8615220126161065791}
+  - component: {fileID: 6108920080621225246}
   m_Layer: 0
   m_Name: NetworkContrab
   m_TagString: Untagged
@@ -1498,6 +1499,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.49599683, y: 1.8802067, z: 0.46082592}
   m_Center: {x: 0.0016894937, y: -0.02383238, z: -0.03686285}
+--- !u!114 &6108920080621225246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8240661434394411190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3ea7d074a1b73c4f91ecea25eae5305, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gunHoldPoint: {fileID: 5909712848383697669}
 --- !u!1 &8267428227512173659
 GameObject:
   m_ObjectHideFlags: 0

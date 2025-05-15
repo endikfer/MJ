@@ -1,6 +1,5 @@
-using UnityEngine;
 using Unity.Netcode;
-using UnityEngine.XR;
+using UnityEngine;
 
 public class GunShooter : NetworkBehaviour
 {
@@ -13,28 +12,18 @@ public class GunShooter : NetworkBehaviour
     {
         if (!IsOwner) return;
 
-        bool rightTriggerPressed = false;
-        bool leftMouseClicked = Input.GetMouseButtonDown(0);
-
-        InputDevice rightHand = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
-        if (rightHand.TryGetFeatureValue(CommonUsages.triggerButton, out bool triggerValue))
-        {
-            rightTriggerPressed = triggerValue;
-        }
-
-        if ((rightTriggerPressed || leftMouseClicked) && Time.time >= nextFireTime)
+        if (Input.GetMouseButtonDown(0) && Time.time >= nextFireTime)
         {
             nextFireTime = Time.time + fireRate;
-
-            SpawnBulletRpc(firePoint.position, firePoint.rotation);
+            SpawnBulletServerRpc(firePoint.position, firePoint.rotation);
         }
     }
 
-    [Rpc(SendTo.Server)]
-    private void SpawnBulletRpc(Vector3 position, Quaternion rotation, RpcParams rpcParams = default)
+    [ServerRpc]
+    private void SpawnBulletServerRpc(Vector3 position, Quaternion rotation)
     {
-        NetworkObject bulletNetObj = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab, position, rotation);
-        bulletNetObj.SpawnWithOwnership(rpcParams.Receive.SenderClientId);
-        bulletNetObj.GetComponent<BulletLogic>().Init();
+        GameObject bullet = Instantiate(bulletPrefab, position, rotation);
+        NetworkObject netObj = bullet.GetComponent<NetworkObject>();
+        netObj.Spawn();
     }
 }
