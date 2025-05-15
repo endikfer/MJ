@@ -14,13 +14,9 @@ public class HealingItem : NetworkBehaviour
         {
             Debug.Log("Entró: " + other.name + " | IsServer: " + IsServer + " | IsHost: " + NetworkManager.Singleton.IsHost);
             PlayerLIfe vida = other.GetComponent<PlayerLIfe>() ?? other.GetComponentInParent<PlayerLIfe>();
-            if (vida == null)
+            if (vida != null)
             {
-                Debug.LogWarning("No se encontró PlayerLife en " + other.name + " ni en sus padres.");
-            }
-            else
-            {
-                Debug.Log("Se encontró PlayerLife en " + vida.gameObject.name);
+                vida.Heal(50);
             }
 
             HealingSpawner.Instance.OnHealingItemCollected();
