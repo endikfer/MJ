@@ -3173,8 +3173,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefabs:
-  - {fileID: 6650292811616477708, guid: 08958b5e52499a748aaef5f1b9e9f344, type: 3}
-  - {fileID: 6650292811616477708, guid: 5f9364cfdc08f3d408738ef2a04380b8, type: 3}
+  - {fileID: 8240661434394411190, guid: 58e0d611ac9ee6047b479eaa016e1f26, type: 3}
+  - {fileID: 4326043093139475545, guid: 812ea7aafaba31043ab365b68e13da90, type: 3}
   gameState: 0
   spawnContrabandista: {fileID: 0}
   spawnPolicia: {fileID: 0}
