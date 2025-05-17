@@ -1,18 +1,46 @@
-using System.Collections;
-using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
-public class NewBehaviourScript : MonoBehaviour
+[RequireComponent(typeof(XRGrabInteractable), typeof(NetworkObject))]
+public class NetworkGrabSync : NetworkBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private XRGrabInteractable grabInteractable;
+    private NetworkObject netObject;
+
+    private void Awake()
     {
-        
+        grabInteractable = GetComponent<XRGrabInteractable>();
+        netObject = GetComponent<NetworkObject>();
+
+        grabInteractable.selectEntered.AddListener(OnGrab);
+        grabInteractable.selectExited.AddListener(OnRelease);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnGrab(SelectEnterEventArgs args)
     {
-        
+        if (IsClient && !IsOwner)
+        {
+            RequestOwnershipServerRpc();
+        }
+    }
+
+    private void OnRelease(SelectExitEventArgs args)
+    {
+        if (IsOwner && netObject.IsSpawned)
+        {
+            // Opcional: Devolver ownership al servidor
+            netObject.RemoveOwnership();
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void RequestOwnershipServerRpc(ServerRpcParams rpcParams = default)
+    {
+        var clientId = rpcParams.Receive.SenderClientId;
+        if (IsServer)
+        {
+            netObject.ChangeOwnership(clientId);
+        }
     }
 }
