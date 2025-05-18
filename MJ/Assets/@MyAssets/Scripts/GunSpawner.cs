@@ -11,7 +11,23 @@ public class GunSpawner : NetworkBehaviour
         if (IsServer)
         {
             GameObject gun = Instantiate(gunPrefab, spawnPosition, Quaternion.identity);
-            gun.GetComponent<NetworkObject>().Spawn(); // No ownership asignado
+            gun.GetComponent<NetworkObject>().Spawn(destroyWithScene: false);
+
+            // Asegurar que el Rigidbody esté listo
+            gun.GetComponent<Rigidbody>().isKinematic = false;
+        }
+    }
+
+    private void SpawnGun()
+    {
+        GameObject gun = Instantiate(gunPrefab, spawnPosition, Quaternion.identity);
+        gun.GetComponent<NetworkObject>().Spawn(destroyWithScene: false);
+
+        // Configuración crítica para VR
+        if (gun.TryGetComponent(out Rigidbody rb))
+        {
+            rb.isKinematic = false;
+            rb.interpolation = RigidbodyInterpolation.Interpolate;
         }
     }
 }

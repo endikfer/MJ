@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2359607303141914334}
   - component: {fileID: 2366737843026173022}
   - component: {fileID: 2376307330214559546}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: M1911
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -103,11 +103,9 @@ GameObject:
   - component: {fileID: 1241618856318585328}
   - component: {fileID: 6420543321673201219}
   - component: {fileID: 2404226255285399301}
-  - component: {fileID: -8199957883168697591}
   - component: {fileID: 1626881971298441093}
-  - component: {fileID: -4795457692767272864}
-  - component: {fileID: 2068974845508442727}
-  m_Layer: 6
+  - component: {fileID: -8199957883168697591}
+  m_Layer: 0
   m_Name: Pistola
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -196,7 +194,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_InteractionLayers:
-    m_Bits: 2
+    m_Bits: 1
   m_DistanceCalculationMode: 1
   m_SelectMode: 0
   m_FocusMode: 1
@@ -288,7 +286,7 @@ MonoBehaviour:
   m_SnapToColliderVolume: 1
   m_ReinitializeDynamicAttachEverySingleGrab: 1
   m_AttachEaseInTime: 0.15
-  m_MovementType: 1
+  m_MovementType: 0
   m_VelocityDamping: 1
   m_VelocityScale: 1
   m_AngularVelocityDamping: 1
@@ -394,6 +392,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ec9e8ff6d1add84fb85e6f3333da7e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1626881971298441093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2353168005439324564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &-8199957883168697591
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -410,42 +420,6 @@ MonoBehaviour:
     type: 3}
   firePoint: {fileID: 1113294279107213595}
   fireRate: 0.5
---- !u!114 &1626881971298441093
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2353168005439324564}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &-4795457692767272864
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2353168005439324564}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c769af722e930d74ea88bd07ac691b10, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2068974845508442727
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2353168005439324564}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da8b2f8641410c6428572fad8d336084, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2353238119857424906
 GameObject:
   m_ObjectHideFlags: 0
@@ -457,7 +431,7 @@ GameObject:
   - component: {fileID: 2359791575075339982}
   - component: {fileID: 2367078228449615072}
   - component: {fileID: 2377232883152375128}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Slide
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -540,7 +514,7 @@ GameObject:
   - component: {fileID: 2351355342469585344}
   - component: {fileID: 2366727425306096692}
   - component: {fileID: 2376319442448578230}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Magazin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -623,7 +597,7 @@ GameObject:
   - component: {fileID: 2359774407379506388}
   - component: {fileID: 2367613812518278756}
   - component: {fileID: 2376233860913157350}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Hammer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -706,7 +680,7 @@ GameObject:
   - component: {fileID: 2351313976032196670}
   - component: {fileID: 2366961749244727760}
   - component: {fileID: 2376287072578661498}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -787,7 +761,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1113294279107213595}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Shot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
