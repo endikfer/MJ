@@ -17,7 +17,7 @@ public class GunSpawner : NetworkBehaviour
             gun.GetComponent<Rigidbody>().isKinematic = false;
         }
     }
-
+            
     private void SpawnGun()
     {
         GameObject gun = Instantiate(gunPrefab, spawnPosition, Quaternion.identity);
