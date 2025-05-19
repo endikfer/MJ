@@ -4,12 +4,11 @@ using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
+using Unity.VisualScripting;
 
 public class PlayerAgent : Agent
 {
     public bool useVectorObs;
-
-    private readonly float[] maxExpectedDistances = new float[] { 7.88f, 20.55f, 31.42f, 40.68f };
 
     private bool canJump = false;
 
@@ -17,12 +16,17 @@ public class PlayerAgent : Agent
     private int successStreak = 0;
     private int totalLevels = 4;
     public int successesRequired = 10;
-    public bool button = false;
+    public bool button1 = false;
+    public bool button2 = false;
+    public bool button3 = false;
+    public bool button4 = false;
 
     public Transform levelStartPosition;
     public Transform[] levelTargets;
 
     public GameObject[] puertas;
+
+    public GameObject[] pared;
 
     public GameObject boton1;
     public GameObject boton2;
@@ -132,11 +136,20 @@ public class PlayerAgent : Agent
     {
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
+        button1 = false;
+        button2 = false;
+        button3 = false;
+        button4 = false;
+
+        pared[0].SetActive(true);
+        pared[1].SetActive(true);
+        pared[2].SetActive(true);
 
         transform.localPosition = levelStartPosition.localPosition;
 
         currentDoorIndex = 0;
-        
+
+
 
         if (camaraController != null && newCameraPositions.Length >= currentLevel - 1)
         {
@@ -170,9 +183,11 @@ public class PlayerAgent : Agent
     // Puedes usar este método cuando detectes que el agente completó el objetivo correctamente
     public void RegisterSuccess()
     {
-        AddReward(50.0f);
+        AddReward(80.0f);
 
         successStreak++;
+
+
 
         if (successStreak >= successesRequired)
         {
@@ -180,12 +195,12 @@ public class PlayerAgent : Agent
             {
                 currentLevel++;
                 successStreak = 0;
-                Debug.Log("¡Avanzas al nivel " + currentLevel + "!");
+                Debug.LogError("¡Avanzas al nivel " + currentLevel + "!");
             }
             else
             {
                 Debug.Log("¡Has completado todos los niveles!");
-                AddReward(200.0f);
+                AddReward(400.0f);
             }
         }
 
@@ -195,7 +210,7 @@ public class PlayerAgent : Agent
     // Si el agente falla o no termina en MaxStep, llamas a esto
     public void RegisterFailure()
     {
-        AddReward(-1.0f);
+        AddReward(-50.0f);
         successStreak = 0;
         currentLevel = 1;
         EndEpisode();
@@ -233,13 +248,17 @@ public class PlayerAgent : Agent
                     // Última puerta -> éxito
                     RegisterSuccess();
                 }
-                if (currentDoorIndex == 2)
+                if (currentDoorIndex == 3)
                 {
-                    Debug.LogWarning("Puerta 3 atravesada.");
+                    Debug.Log("Puerta 3 atravesada.");
                 }
-                else if (currentDoorIndex == 3)
+                else if (currentDoorIndex == 4)
                 {
-                    Debug.LogError("Puerta 4 atravesada.");
+                    Debug.Log("Puerta 4 atravesada.");
+                }
+                else if (currentDoorIndex == 2)
+                {
+                    Debug.Log("Puerta 2 atravesada.");
                 }
             }
 
@@ -258,24 +277,60 @@ public class PlayerAgent : Agent
                 }
             }
         }
+
+        if (other.gameObject.CompareTag("Buton1"))
+        {
+            pared[0].SetActive(!pared[0].activeSelf);
+
+            if (button1 == false)
+            {
+                button1 = true;
+                AddReward(20.0f);
+                Debug.Log("Boton 1 pulsado.");
+            }
+        }
+        if (other.gameObject.CompareTag("Buton2"))
+        {
+            pared[1].SetActive(!pared[1].activeSelf);
+
+            if (button2 == false)
+            {
+                button2 = true;
+                AddReward(20.0f);
+                Debug.Log("Boton 2 pulsado.");
+            }
+        }
+        if (other.gameObject.CompareTag("Buton3") || other.gameObject.CompareTag("Buton4"))
+        {
+            pared[2].SetActive(!pared[2].activeSelf);
+
+            if (button3 == false)
+            {
+                button3 = true;
+                AddReward(20.0f);
+                Debug.Log("Boton 3 pulsado.");
+            }
+            else if (button4 == false)
+            {
+                button4 = true;
+                AddReward(20.0f);
+                Debug.Log("Boton 4 pulsado.");
+            }
+        }
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Jump") || collision.gameObject.CompareTag("Buton"))
+        if (collision.gameObject.CompareTag("Jump"))
         {
             canJump = true;
         }
-        if (collision.gameObject.CompareTag("Buton") && button == true)
-        {
-            button = false;
-            AddReward(5.0f);
-        }
+        
     }
 
     void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Jump") || collision.gameObject.CompareTag("Buton"))
+        if (collision.gameObject.CompareTag("Jump"))
         {
             canJump = false;
         }
@@ -289,10 +344,6 @@ public class PlayerAgent : Agent
             float maxExpectedDistance = 40.68f;
             float normalizedPenalty = Mathf.Clamp01(distance / maxExpectedDistance);
 
-
-            //debug log. 
-
-            Debug.Log(-normalizedPenalty * 0.5f);
             AddReward(-normalizedPenalty * 0.5f);
         }
     }

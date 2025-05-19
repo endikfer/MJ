@@ -7,7 +7,10 @@ TagManager:
   - Door
   - Puerta
   - Jump
-  - Buton
+  - Buton1
+  - Buton2
+  - Buton4
+  - Buton3
   layers:
   - Default
   - TransparentFX
