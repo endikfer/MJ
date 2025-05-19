@@ -1,34 +1,47 @@
-using UnityEngine;
 using Unity.Netcode;
+using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
-[RequireComponent(typeof(NetworkObject), typeof(XRGrabInteractable))]
-public class NetworkGrabbable : MonoBehaviour
+public class NetworkGrabbable : NetworkBehaviour
 {
     private XRGrabInteractable grabInteractable;
 
-    void Awake()
+    private void Awake()
     {
         grabInteractable = GetComponent<XRGrabInteractable>();
-
-        grabInteractable.selectEntered.AddListener(OnSelectEntered);
     }
 
-    private void OnSelectEntered(SelectEnterEventArgs args)
+    private void OnEnable()
     {
-        // Solo el host puede transferir ownership
-        if (!NetworkManager.Singleton.IsServer)
-            return;
+        grabInteractable.selectEntered.AddListener(OnGrab);
+    }
 
-        var interactorObject = args.interactorObject;
-        var interactorGO = interactorObject.transform.gameObject;
+    private void OnDisable()
+    {
+        grabInteractable.selectEntered.RemoveListener(OnGrab);
+    }
 
-        var networkObject = GetComponent<NetworkObject>();
+    private void OnGrab(SelectEnterEventArgs args)
+    {
+        if (!IsOwner)
+        {
+            RequestOwnershipServerRpc(NetworkManager.Singleton.LocalClientId);
 
-        // Obtenemos el clientId del jugador que está agarrando
-        ulong clientId = interactorGO.GetComponent<NetworkObject>()?.OwnerClientId ?? 0;
+            var interactorComponent = args.interactorObject as Component;
+            if (interactorComponent != null)
+            {
+                var xrBaseInteractor = interactorComponent.GetComponent<XRBaseInteractor>();
+                if (xrBaseInteractor != null && xrBaseInteractor.interactionManager != null)
+                {
+                    xrBaseInteractor.interactionManager.CancelInteractableSelection(grabInteractable);
+                }
+            }
+        }
+    }
 
-        // Transferimos ownership al jugador que agarró
-        networkObject.ChangeOwnership(clientId);
+    [ServerRpc(RequireOwnership = false)]
+    private void RequestOwnershipServerRpc(ulong requestingClientId)
+    {
+        NetworkObject.ChangeOwnership(requestingClientId);
     }
 }
