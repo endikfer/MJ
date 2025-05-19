@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using Unity.Netcode;
+﻿using Unity.Netcode;
+using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -8,10 +8,17 @@ public class RigidbodyKinematicToggle : NetworkBehaviour
     private XRGrabInteractable grabInteractable;
     private Rigidbody rb;
 
+    private NetworkVariable<bool> isHeld = new NetworkVariable<bool>(false);
+
     private void Awake()
     {
         grabInteractable = GetComponent<XRGrabInteractable>();
         rb = GetComponent<Rigidbody>();
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        isHeld.OnValueChanged += OnIsHeldChanged;
     }
 
     private void OnEnable()
@@ -29,18 +36,32 @@ public class RigidbodyKinematicToggle : NetworkBehaviour
     private void OnGrab(SelectEnterEventArgs args)
     {
         if (!IsOwner) return;
-
-        Debug.Log("GRAB → Activando kinematic");
-        rb.isKinematic = true;
-        rb.useGravity = false;
+        SetIsHeldServerRpc(true);
     }
 
     private void OnRelease(SelectExitEventArgs args)
     {
         if (!IsOwner) return;
+        SetIsHeldServerRpc(false);
+    }
 
-        Debug.Log("RELEASE → Desactivando kinematic");
-        rb.isKinematic = false;
-        rb.useGravity = true;
+    [ServerRpc]
+    private void SetIsHeldServerRpc(bool held)
+    {
+        isHeld.Value = held;
+    }
+
+    private void OnIsHeldChanged(bool previousValue, bool newValue)
+    {
+        if (newValue)
+        {
+            rb.isKinematic = true;
+            rb.useGravity = false;
+        }
+        else
+        {
+            rb.isKinematic = false;
+            rb.useGravity = true;
+        }
     }
 }
