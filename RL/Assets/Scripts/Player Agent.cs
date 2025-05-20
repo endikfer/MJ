@@ -217,7 +217,7 @@ public class PlayerAgent : Agent
             {
                 currentLevel++;
                 successStreak = 0;
-                Debug.LogError("¡Avanzas al nivel " + currentLevel + "!");
+                Debug.Log("¡Avanzas al nivel " + currentLevel + "!");
                 
             }
             else
@@ -304,6 +304,7 @@ public class PlayerAgent : Agent
                 else if (currentDoorIndex > 1)
                 {
                     puertas[currentDoorIndex - 2].GetComponentInChildren<Door>().CloseDoor();
+                    pared[currentDoorIndex - 2].SetActive(true);
                 }
             }
         }
