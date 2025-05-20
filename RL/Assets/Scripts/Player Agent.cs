@@ -12,6 +12,9 @@ public class PlayerAgent : Agent
 
     private bool canJump = false;
 
+    private bool hasArrive = false;
+    private bool hasToArrive = false;
+
     private int currentLevel = 1;
     private int successStreak = 0;
     private int totalLevels = 4;
@@ -23,6 +26,8 @@ public class PlayerAgent : Agent
 
     public Transform levelStartPosition;
     public Transform[] levelTargets;
+
+    public Transform destino;
 
     public GameObject[] puertas;
 
@@ -134,23 +139,23 @@ public class PlayerAgent : Agent
 
     public override void OnEpisodeBegin()
     {
+        if (hasToArrive == true && hasArrive != true)
+        {
+            currentLevel = 1;
+            successStreak = 0;
+            hasToArrive = false;
+        }
+        else
+        {
 
+        }
 
+        hasArrive = false;
 
-        //if (hallegadoALaPuertaQueLeToca == true)
-        //{
-
-        //    contador += 1; 
-
-        //    //Logica de qe nivel toca o lo que se 
-        //}
-        //else
-        //{
-
-        //    //
-        //}
-
-        //hallegado = false; 
+        if (currentLevel == 4)
+        {
+            hasToArrive = true;
+        }
 
 
         rb.velocity = Vector3.zero;
@@ -202,8 +207,6 @@ public class PlayerAgent : Agent
     // Puedes usar este método cuando detectes que el agente completó el objetivo correctamente
     public void RegisterSuccess()
     {
-        AddReward(80.0f);
-
         successStreak++;
 
 
@@ -215,11 +218,13 @@ public class PlayerAgent : Agent
                 currentLevel++;
                 successStreak = 0;
                 Debug.LogError("¡Avanzas al nivel " + currentLevel + "!");
+                
             }
             else
             {
                 Debug.Log("¡Has completado todos los niveles!");
                 AddReward(400.0f);
+                hasArrive = true;
             }
         }
 
@@ -232,6 +237,7 @@ public class PlayerAgent : Agent
         AddReward(-50.0f);
         successStreak = 0;
         currentLevel = 1;
+        hasArrive = false;
         EndEpisode();
     }
 
@@ -267,6 +273,11 @@ public class PlayerAgent : Agent
                     // Última puerta -> éxito
                     RegisterSuccess();
                 }
+
+
+
+
+
                 if (currentDoorIndex == 3)
                 {
                     Debug.Log("Puerta 3 atravesada.");
@@ -359,8 +370,8 @@ public class PlayerAgent : Agent
     {
         if (levelTargets.Length >= currentLevel)
         {
-            float distance = Vector3.Distance(transform.position, levelTargets[4].position);
-            float maxExpectedDistance = 40.68f;
+            float distance = Vector3.Distance(transform.position, destino.position);
+            float maxExpectedDistance = 45.68f;
             float normalizedPenalty = Mathf.Clamp01(distance / maxExpectedDistance);
 
             AddReward(-normalizedPenalty * 0.5f);
