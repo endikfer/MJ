@@ -134,6 +134,25 @@ public class PlayerAgent : Agent
 
     public override void OnEpisodeBegin()
     {
+
+
+
+        //if (hallegadoALaPuertaQueLeToca == true)
+        //{
+
+        //    contador += 1; 
+
+        //    //Logica de qe nivel toca o lo que se 
+        //}
+        //else
+        //{
+
+        //    //
+        //}
+
+        //hallegado = false; 
+
+
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         button1 = false;
