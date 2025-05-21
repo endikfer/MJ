@@ -1314,9 +1314,9 @@ GameObject:
   - component: {fileID: 1478415156777292300}
   - component: {fileID: 6419202453168804918}
   - component: {fileID: 9112614324188760068}
-  - component: {fileID: 5097065863656379966}
   - component: {fileID: 9143951340722833682}
   - component: {fileID: -8615220126161065791}
+  - component: {fileID: -2155558623636155753}
   m_Layer: 0
   m_Name: NetworkContrab
   m_TagString: Untagged
@@ -1449,20 +1449,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xrOriginName: XR Origin (XR Rig)
   isDead: 0
---- !u!114 &5097065863656379966
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8240661434394411190}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TransitionStateInfoList: []
-  m_Animator: {fileID: 6419202453168804918}
 --- !u!114 &9143951340722833682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1498,6 +1484,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.49599683, y: 1.8802067, z: 0.46082592}
   m_Center: {x: 0.0016894937, y: -0.02383238, z: -0.03686285}
+--- !u!114 &-2155558623636155753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8240661434394411190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c573f10322fc9443b150447f2957b68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransitionStateInfoList: []
+  m_Animator: {fileID: 6419202453168804918}
 --- !u!1 &8267428227512173659
 GameObject:
   m_ObjectHideFlags: 0

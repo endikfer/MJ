@@ -201,15 +201,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d0e287593f91f3e4f87cb98b854a5c92,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: -4284934416896804604}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d0e287593f91f3e4f87cb98b854a5c92,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: -1842229713263444416}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d0e287593f91f3e4f87cb98b854a5c92,
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 8573908714365760469}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d0e287593f91f3e4f87cb98b854a5c92,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -1030724023543101606}
   m_SourcePrefab: {fileID: 100100000, guid: d0e287593f91f3e4f87cb98b854a5c92, type: 3}
 --- !u!4 &3981993412519532259 stripped
 Transform:
@@ -307,20 +307,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xrOriginName: XR Origin (XR Rig)
   isDead: 0
---- !u!114 &-4284934416896804604
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4326043093139475545}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TransitionStateInfoList: []
-  m_Animator: {fileID: 7035411233110084761}
 --- !u!114 &-1842229713263444416
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -356,6 +342,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.49599683, y: 1.9197515, z: 0.46082592}
   m_Center: {x: 0.0016894937, y: 0.8721736, z: -0.03686285}
+--- !u!114 &-1030724023543101606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4326043093139475545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c573f10322fc9443b150447f2957b68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransitionStateInfoList: []
+  m_Animator: {fileID: 7035411233110084761}
 --- !u!137 &4599164646578036004 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: -8134667007107732436, guid: d0e287593f91f3e4f87cb98b854a5c92,
