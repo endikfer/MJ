@@ -104,6 +104,7 @@ GameObject:
   - component: {fileID: 1499944564736783597}
   - component: {fileID: 8119466751951271465}
   - component: {fileID: 5731391659774443150}
+  - component: {fileID: -5848478901827986851}
   m_Layer: 0
   m_Name: Pistola
   m_TagString: Untagged
@@ -403,6 +404,36 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &-5848478901827986851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2353168005439324564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5674f3ceb670378409c2c66aeff485c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPrefab: {fileID: 5178155969580373748, guid: e50fcf2bdfb099f41bab77127d4e0bad,
+    type: 3}
+  shotPoint: {fileID: 1113294279107213595}
+  bulletForce: 500
+  fireRate: 0.5
+  triggerAction:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Trigger
+      m_Type: 1
+      m_ExpectedControlType: Button
+      m_Id: f9d04676-91c4-4202-ace5-1c719e4d6359
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 83097790271614945, guid: c348712bda248c246b8c49b3db54643f,
+      type: 3}
 --- !u!1 &2353238119857424906
 GameObject:
   m_ObjectHideFlags: 0
