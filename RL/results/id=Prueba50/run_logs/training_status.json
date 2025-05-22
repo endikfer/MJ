@@ -1,0 +1,65 @@
+{
+    "Player": {
+        "checkpoints": [
+            {
+                "steps": 6499994,
+                "file_path": "results\\id=Prueba50\\Player\\Player-6499994.onnx",
+                "reward": -50.13428070965935,
+                "creation_time": 1747908385.4494505,
+                "auxillary_file_paths": [
+                    "results\\id=Prueba50\\Player\\Player-6499994.pt"
+                ]
+            },
+            {
+                "steps": 6999997,
+                "file_path": "results\\id=Prueba50\\Player\\Player-6999997.onnx",
+                "reward": -52.33808242797851,
+                "creation_time": 1747908754.8726628,
+                "auxillary_file_paths": [
+                    "results\\id=Prueba50\\Player\\Player-6999997.pt"
+                ]
+            },
+            {
+                "steps": 7499976,
+                "file_path": "results\\id=Prueba50\\Player\\Player-7499976.onnx",
+                "reward": -51.92249269056485,
+                "creation_time": 1747909126.009268,
+                "auxillary_file_paths": [
+                    "results\\id=Prueba50\\Player\\Player-7499976.pt"
+                ]
+            },
+            {
+                "steps": 7999972,
+                "file_path": "results\\id=Prueba50\\Player\\Player-7999972.onnx",
+                "reward": -47.04403779313371,
+                "creation_time": 1747909519.5250485,
+                "auxillary_file_paths": [
+                    "results\\id=Prueba50\\Player\\Player-7999972.pt"
+                ]
+            },
+            {
+                "steps": 8394021,
+                "file_path": "results\\id=Prueba50\\Player\\Player-8394021.onnx",
+                "reward": null,
+                "creation_time": 1747909869.0109282,
+                "auxillary_file_paths": [
+                    "results\\id=Prueba50\\Player\\Player-8394021.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 8394021,
+            "file_path": "results\\id=Prueba50\\Player.onnx",
+            "reward": null,
+            "creation_time": 1747909869.0109282,
+            "auxillary_file_paths": [
+                "results\\id=Prueba50\\Player\\Player-8394021.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.7.0+cpu"
+    }
+}
