@@ -1,23 +1,20 @@
-using Unity.Netcode;
 using UnityEngine;
+using Unity.Netcode;
 
 public class Bullet : NetworkBehaviour
 {
-    public float lifeTime = 2f;
-    public float damage = 10f; 
+    public float lifetime = 5f;
 
     private void Start()
     {
-        if (IsServer)
-        {
-            Destroy(gameObject, lifeTime);
-        }
+        Destroy(gameObject, lifetime);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (!IsServer) return;
-
-        Destroy(gameObject);
+        if (IsServer)
+        {
+            Destroy(gameObject);
+        }
     }
 }

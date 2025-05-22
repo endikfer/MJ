@@ -1,5 +1,5 @@
-using Unity.Netcode;
 using UnityEngine;
+using Unity.Netcode;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public class NetworkGrabbable : NetworkBehaviour
@@ -9,39 +9,33 @@ public class NetworkGrabbable : NetworkBehaviour
     private void Awake()
     {
         grabInteractable = GetComponent<XRGrabInteractable>();
-    }
-
-    private void OnEnable()
-    {
         grabInteractable.selectEntered.AddListener(OnGrab);
-    }
-
-    private void OnDisable()
-    {
-        grabInteractable.selectEntered.RemoveListener(OnGrab);
     }
 
     private void OnGrab(SelectEnterEventArgs args)
     {
         if (!IsOwner)
         {
-            RequestOwnershipServerRpc(NetworkManager.Singleton.LocalClientId);
-
-            var interactorComponent = args.interactorObject as Component;
-            if (interactorComponent != null)
-            {
-                var xrBaseInteractor = interactorComponent.GetComponent<XRBaseInteractor>();
-                if (xrBaseInteractor != null && xrBaseInteractor.interactionManager != null)
-                {
-                    xrBaseInteractor.interactionManager.CancelInteractableSelection(grabInteractable);
-                }
-            }
+            ulong clientId = NetworkManager.LocalClientId;
+            Debug.Log($"Solicitando ownership para cliente {clientId}");
+            RequestOwnershipServerRpc(clientId);
         }
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void RequestOwnershipServerRpc(ulong requestingClientId)
+    private void RequestOwnershipServerRpc(ulong clientId)
     {
-        NetworkObject.ChangeOwnership(requestingClientId);
+        Debug.Log($"[SERVER] Transferencia de ownership al cliente {clientId}");
+        NetworkObject.ChangeOwnership(clientId);
+        NotifyOwnershipClientRpc(clientId);
+    }
+
+    [ClientRpc]
+    private void NotifyOwnershipClientRpc(ulong clientId)
+    {
+        if (NetworkManager.LocalClientId == clientId)
+        {
+            Debug.Log("Ownership confirmado por el cliente, listo para disparar.");
+        }
     }
 }

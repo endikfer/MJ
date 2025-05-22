@@ -35,7 +35,6 @@ Transform:
   - {fileID: 2351355342469585344}
   - {fileID: 2359791575075339982}
   - {fileID: 2351313976032196670}
-  - {fileID: 1113294279107213595}
   m_Father: {fileID: 2359812229109309824}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2366737843026173022
@@ -126,6 +125,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2359607303141914334}
+  - {fileID: 1113294279107213595}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &2286173905268777903
@@ -340,7 +340,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3497988964
+  GlobalObjectIdHash: 671982699
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -418,22 +418,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 5178155969580373748, guid: e50fcf2bdfb099f41bab77127d4e0bad,
     type: 3}
-  shotPoint: {fileID: 1113294279107213595}
+  firePoint: {fileID: 1113294279107213595}
   bulletForce: 500
   fireRate: 0.5
-  triggerAction:
-    m_UseReference: 1
-    m_Action:
-      m_Name: Trigger
-      m_Type: 1
-      m_ExpectedControlType: Button
-      m_Id: f9d04676-91c4-4202-ace5-1c719e4d6359
-      m_Processors: 
-      m_Interactions: 
-      m_SingletonActionBindings: []
-      m_Flags: 0
-    m_Reference: {fileID: 83097790271614945, guid: c348712bda248c246b8c49b3db54643f,
-      type: 3}
 --- !u!1 &2353238119857424906
 GameObject:
   m_ObjectHideFlags: 0
@@ -790,10 +777,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3115359460809722834}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0.025, z: -0.147}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalPosition: {x: 0, y: 0.024999976, z: -0.1551}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2359607303141914334}
+  m_Father: {fileID: 2359812229109309824}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}

@@ -1,20 +1,17 @@
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public class GunShooter : NetworkBehaviour
 {
     public GameObject bulletPrefab;
-    public Transform shotPoint;
-    public InputActionProperty triggerAction;
-
-    public float bulletSpeed = 10f;
+    public Transform firePoint;
+    public float bulletForce = 20f;
     public float fireRate = 0.5f;
 
-    private float lastShotTime;
+    private float nextFireTime = 0f;
     private XRGrabInteractable grabInteractable;
-    private bool isHeldByLocalPlayer = false;
+    private bool isHeld = false;
 
     private void Awake()
     {
@@ -23,11 +20,16 @@ public class GunShooter : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        Debug.Log($"[OnNetworkSpawn] GunShooter activo. IsOwner: {IsOwner}, IsServer: {IsServer}, ClientId: {OwnerClientId}");
+    }
+
+    private void OnEnable()
+    {
         grabInteractable.selectEntered.AddListener(OnGrab);
         grabInteractable.selectExited.AddListener(OnRelease);
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         grabInteractable.selectEntered.RemoveListener(OnGrab);
         grabInteractable.selectExited.RemoveListener(OnRelease);
@@ -35,59 +37,64 @@ public class GunShooter : NetworkBehaviour
 
     private void OnGrab(SelectEnterEventArgs args)
     {
-        // Verificamos si el interactor pertenece al cliente local
-        var interactorNetworkObject = args.interactorObject.transform.GetComponent<NetworkObject>();
-
-        if (interactorNetworkObject != null && interactorNetworkObject.IsLocalPlayer)
+        if (IsOwner)
         {
-            isHeldByLocalPlayer = true;
-            Debug.Log("El jugador local ha agarrado el arma");
+            isHeld = true;
+            Debug.Log("Pistola agarrada por el owner.");
         }
     }
 
     private void OnRelease(SelectExitEventArgs args)
     {
-        // Sólo consideramos soltado si el arma ya NO está siendo agarrada por nadie
-        if (grabInteractable.isSelected)
+        if (IsOwner)
         {
-            Debug.Log("Intento de liberar arma, pero sigue siendo agarrada, no cambio estado");
-            return;
-        }
-
-        isHeldByLocalPlayer = false;
-        Debug.Log("El jugador local soltó el arma");
-    }
-
-    void Update()
-    {
-        if (!IsOwner) return;
-
-        // Por seguridad, chequeamos si el arma sigue seleccionada; si no, consideramos que no está sostenida
-        if (!grabInteractable.isSelected)
-        {
-            isHeldByLocalPlayer = false;
-            return;
-        }
-
-        if (!isHeldByLocalPlayer) return;
-
-        bool triggerPressed = triggerAction.action.ReadValue<float>() > 0.5f;
-        bool mouseClicked = Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame;
-
-        if ((triggerPressed || mouseClicked) && Time.time >= lastShotTime + fireRate)
-        {
-            lastShotTime = Time.time;
-            Debug.Log("DISPARO local");
-            ShootServerRpc();
+            isHeld = false;
+            Debug.Log("Pistola soltada por el owner.");
         }
     }
 
-    [ServerRpc]
-    void ShootServerRpc(ServerRpcParams rpcParams = default)
+    private void Update()
     {
-        Debug.Log("Entró al ShootServerRpc");
-        GameObject bullet = Instantiate(bulletPrefab, shotPoint.position, shotPoint.rotation);
-        bullet.GetComponent<Rigidbody>().velocity = shotPoint.forward * bulletSpeed;
+        if (!IsOwner || !isHeld) return;
+
+#if UNITY_EDITOR || UNITY_STANDALONE
+        if (Input.GetMouseButton(0) && Time.time >= nextFireTime)
+        {
+            nextFireTime = Time.time + fireRate;
+            Debug.Log("Click detectado, disparando...");
+            Debug.Log($"[CLIENT] IsOwner: {IsOwner}, IsHost: {IsHost}, IsServer: {IsServer}");
+            Debug.Log($"[CLIENT] OwnerClientId: {OwnerClientId}, LocalClientId: {NetworkManager.Singleton.LocalClientId}");
+            Debug.Log($"[CLIENT] IsSpawned: {GetComponent<NetworkObject>().IsSpawned}");
+
+            if (firePoint == null)
+            {
+                Debug.LogError("firePoint no está asignado en el Inspector.");
+                return;
+            }
+
+            ShootServerRpc(firePoint.position, firePoint.rotation);
+        }
+#endif
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void ShootServerRpc(Vector3 position, Quaternion rotation, ServerRpcParams rpcParams = default)
+    {
+        Debug.Log($"ServerRpc llamado por: {rpcParams.Receive.SenderClientId}");
+
+        if (rpcParams.Receive.SenderClientId != OwnerClientId)
+        {
+            Debug.LogWarning("Cliente no autorizado intentó disparar.");
+            return;
+        }
+
+        GameObject bullet = Instantiate(bulletPrefab, position, rotation);
         bullet.GetComponent<NetworkObject>().Spawn();
+
+        Rigidbody rb = bullet.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.AddForce(firePoint.forward * bulletForce, ForceMode.VelocityChange);
+        }
     }
 }
