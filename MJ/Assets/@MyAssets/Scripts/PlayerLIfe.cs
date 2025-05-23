@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerLIfe : NetworkBehaviour
+public class PlayerLife : NetworkBehaviour
 {
     public float maxHealth = 100f;
     private float currentHealth;

@@ -13,7 +13,7 @@ public class HealingItem : NetworkBehaviour
         if (other.CompareTag("Player"))
         {
             Debug.Log("Entró: " + other.name + " | IsServer: " + IsServer + " | IsHost: " + NetworkManager.Singleton.IsHost);
-            PlayerLIfe vida = other.GetComponent<PlayerLIfe>() ?? other.GetComponentInParent<PlayerLIfe>();
+            PlayerLife vida = other.GetComponent<PlayerLife>() ?? other.GetComponentInParent<PlayerLife>();
             if (vida != null)
             {
                 vida.Heal(50);

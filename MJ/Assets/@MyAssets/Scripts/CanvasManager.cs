@@ -12,7 +12,7 @@ public class CanvasManager : MonoBehaviour
     public TextMeshProUGUI healthText;
     public Image fillImage;
 
-    private PlayerLIfe player;
+    private PlayerLife player;
     private bool playerFound = false;
 
     void Start()
@@ -24,7 +24,7 @@ public class CanvasManager : MonoBehaviour
     {
         while (!playerFound)
         {
-            PlayerLIfe[] allPlayers = FindObjectsOfType<PlayerLIfe>();
+            PlayerLife[] allPlayers = FindObjectsOfType<PlayerLife>();
             foreach (var pl in allPlayers)
             {
                 if (pl.IsOwner) // Solo el jugador local
