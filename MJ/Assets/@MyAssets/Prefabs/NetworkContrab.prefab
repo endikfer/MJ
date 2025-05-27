@@ -1317,7 +1317,6 @@ GameObject:
   - component: {fileID: 9143951340722833682}
   - component: {fileID: -8615220126161065791}
   - component: {fileID: -2155558623636155753}
-  - component: {fileID: 5289198926738249103}
   m_Layer: 6
   m_Name: NetworkContrab
   m_TagString: Untagged
@@ -1356,7 +1355,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 552374607
+  GlobalObjectIdHash: 4069061394
   InScenePlacedSourceGlobalObjectIdHash: 3750144375
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -1502,33 +1501,6 @@ MonoBehaviour:
   - speed
   boolParameters:
   - IsDead
---- !u!54 &5289198926738249103
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8240661434394411190}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &8267428227512173659
 GameObject:
   m_ObjectHideFlags: 0
