@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Netcode;
+using System.Collections;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public class GunController : NetworkBehaviour
@@ -15,11 +16,13 @@ public class GunController : NetworkBehaviour
     public AudioClip shootSound;
     public Light muzzleFlashLight;
     public float flashDuration = 0.1f;
+    public float maxLightIntensity = 5f;
 
     private XRGrabInteractable grabInteractable;
     private float nextFireTime;
     private AudioSource gunAudio;
     private float flashTimer;
+    private Coroutine flashCoroutine;
 
     private void Awake()
     {
@@ -148,25 +151,52 @@ public class GunController : NetworkBehaviour
     [ClientRpc]
     private void PlayGunEffectsClientRpc()
     {
-        Debug.Log("[CLIENTE] Recibido PlayGunEffectsClientRpc");
-
-        // Sonido de disparo
         if (gunAudio != null && shootSound != null)
         {
             gunAudio.PlayOneShot(shootSound);
-            Debug.Log("[CLIENTE] Sonido de disparo reproducido");
-        }
-        else
-        {
-            Debug.LogWarning("[CLIENTE] No se pudo reproducir sonido de disparo (gunAudio o shootSound null)");
         }
 
-        // Fogonazo con luz
+        // Efecto de fogonazo
+        StartMuzzleFlash();
+
+        // Notificar a otros clientes
+        PlayMuzzleFlashClientRpc();
+    }
+
+    private void StartMuzzleFlash()
+    {
         if (muzzleFlashLight != null)
         {
             muzzleFlashLight.enabled = true;
+            muzzleFlashLight.intensity = maxLightIntensity;
             flashTimer = flashDuration;
-            Debug.Log("[CLIENTE] Efecto de fogonazo activado");
+
+            // Opcional: Efecto de decaimiento
+            if (flashCoroutine != null) StopCoroutine(flashCoroutine);
+            flashCoroutine = StartCoroutine(DecayMuzzleFlash());
+        }
+    }
+
+    private IEnumerator DecayMuzzleFlash()
+    {
+        float elapsed = 0f;
+        while (elapsed < flashDuration)
+        {
+            if (muzzleFlashLight != null)
+            {
+                muzzleFlashLight.intensity = Mathf.Lerp(maxLightIntensity, 0, elapsed / flashDuration);
+            }
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    [ClientRpc]
+    private void PlayMuzzleFlashClientRpc()
+    {
+        if (!IsOwner) // Solo ejecutar en otros clientes
+        {
+            StartMuzzleFlash();
         }
     }
 
