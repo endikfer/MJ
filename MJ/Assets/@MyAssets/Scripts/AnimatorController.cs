@@ -64,6 +64,6 @@ public class AnimatorController : NetworkBehaviour
     public void DieServerRpc()
     {
         isDead = true;
-        networkAnimator.SetTrigger("Die");
+        GetComponent<ClientNetworkAnimator>().TriggerServerRpc("Die");
     }
 }
