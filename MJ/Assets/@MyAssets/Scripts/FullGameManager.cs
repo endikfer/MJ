@@ -8,6 +8,8 @@ using UnityEngine.SceneManagement;
 public class FullGameManager : NetworkBehaviour
 {
     [SerializeField] private GameObject[] playerPrefabs;
+    private bool sceneAlreadyLoaded = false;
+
 
     public struct PlayerData : INetworkSerializable, IEquatable<PlayerData>
     {
@@ -248,6 +250,10 @@ public class FullGameManager : NetworkBehaviour
     {
         if (NetworkManager.Singleton.LocalClientId == targetClientId)
         {
+            if (sceneAlreadyLoaded) return;
+
+            sceneAlreadyLoaded = true;
+
             if (isWinner)
                 SceneManager.LoadScene("Win");
             else
@@ -255,14 +261,19 @@ public class FullGameManager : NetworkBehaviour
         }
     }
 
+
     private void OnEnable()
     {
         NetworkManager.OnClientDisconnectCallback += HandleClientDisconnect;
+        NetworkManager.Singleton.OnClientStopped += OnClientStoppedHandler;
+
     }
 
     private void OnDisable()
     {
         NetworkManager.OnClientDisconnectCallback -= HandleClientDisconnect;
+        NetworkManager.Singleton.OnClientStopped -= OnClientStoppedHandler;
+
     }
 
 
@@ -300,8 +311,18 @@ public class FullGameManager : NetworkBehaviour
         // Si soy cliente (no host) y se desconectó el host
         if (!NetworkManager.Singleton.IsHost && clientId == NetworkManager.ServerClientId)
         {
-            Debug.Log("Host se ha desconectado. Volviendo al menú.");
-            SceneManager.LoadScene("HostDisconnected"); // o "MainMenu", como prefieras
+            Debug.Log("Host se ha desconectado. Llendo a win.");
+            SceneManager.LoadScene("Win"); // o "MainMenu", como prefieras
+        }
+    }
+
+    private void OnClientStoppedHandler(bool wasHost)
+    {
+        if (!wasHost && !sceneAlreadyLoaded)
+        {
+            Debug.Log("Se perdió la conexión con el host. Cargando escena de victoria.");
+            sceneAlreadyLoaded = true;
+            SceneManager.LoadScene("Win");
         }
     }
 
