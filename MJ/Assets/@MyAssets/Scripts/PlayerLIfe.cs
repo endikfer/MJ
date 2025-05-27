@@ -39,6 +39,10 @@ public class PlayerLife : NetworkBehaviour
     public void Die()
     {
         animator.Die();
+        if (IsOwner)
+        {
+            NotifyDeathToServerRpc();
+        }
     }
 
     public float GetCurrentHealth()
@@ -66,5 +70,12 @@ public class PlayerLife : NetworkBehaviour
 
         // Aquí puedes actualizar UI si tienes barra de vida
         Debug.Log($"[CLIENT RPC] Nueva vida: {currentHealth}");
+    }
+
+    [Rpc(SendTo.Server)]
+    private void NotifyDeathToServerRpc()
+    {
+        // El servidor maneja quién murió
+        FullGameManager.Instance.HandlePlayerDeathServerRpc(OwnerClientId);
     }
 }

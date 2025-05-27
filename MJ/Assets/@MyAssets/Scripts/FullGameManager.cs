@@ -74,6 +74,15 @@ public class FullGameManager : NetworkBehaviour
         playerDataList = new NetworkList<PlayerData>();
     }
 
+    private void Start()
+    {
+        if (NetworkManager.Singleton != null)
+        {
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
+        }
+    }
+
+
     public void SelectPlayer(int player)
     {
         ulong localClientId = NetworkManager.Singleton.LocalClientId;
@@ -214,5 +223,88 @@ public class FullGameManager : NetworkBehaviour
 
         return 0; // Default
     }
+
+    [Rpc(SendTo.Server)]
+    public void HandlePlayerDeathServerRpc(ulong loserClientId)
+    {
+        ulong winnerClientId = 0;
+
+        foreach (var player in playerDataList)
+        {
+            if (player.clientId != loserClientId)
+            {
+                winnerClientId = player.clientId;
+                break;
+            }
+        }
+
+        LoadEndSceneClientRpc(winnerClientId, true);
+        LoadEndSceneClientRpc(loserClientId, false);
+    }
+
+
+    [ClientRpc]
+    void LoadEndSceneClientRpc(ulong targetClientId, bool isWinner)
+    {
+        if (NetworkManager.Singleton.LocalClientId == targetClientId)
+        {
+            if (isWinner)
+                SceneManager.LoadScene("Win");
+            else
+                SceneManager.LoadScene("Lose");
+        }
+    }
+
+    private void OnEnable()
+    {
+        NetworkManager.OnClientDisconnectCallback += HandleClientDisconnect;
+    }
+
+    private void OnDisable()
+    {
+        NetworkManager.OnClientDisconnectCallback -= HandleClientDisconnect;
+    }
+
+
+    private void HandleClientDisconnect(ulong disconnectedClientId)
+    {
+        // Eliminar al jugador desconectado de la lista
+        for (int i = 0; i < playerDataList.Count; i++)
+        {
+            if (playerDataList[i].clientId == disconnectedClientId)
+            {
+                playerDataList.RemoveAt(i);
+                break;
+            }
+        }
+
+        // Solo actuar si estamos en la escena principal de juego
+        if (gameState == GAME_STATES.Main)
+        {
+            Debug.Log($"Cliente {disconnectedClientId} se ha desconectado. Verificando condiciones de victoria.");
+
+            if (playerDataList.Count == 1)
+            {
+                var remainingPlayer = playerDataList[0];
+                LoadEndSceneClientRpc(remainingPlayer.clientId, true);
+            }
+
+            // El desconectado se marca como perdedor si sigue conectado (en realidad ya no lo está, así que es opcional)
+            LoadEndSceneClientRpc(disconnectedClientId, false);
+        }
+    }
+
+
+    private void OnClientDisconnected(ulong clientId)
+    {
+        // Si soy cliente (no host) y se desconectó el host
+        if (!NetworkManager.Singleton.IsHost && clientId == NetworkManager.ServerClientId)
+        {
+            Debug.Log("Host se ha desconectado. Volviendo al menú.");
+            SceneManager.LoadScene("HostDisconnected"); // o "MainMenu", como prefieras
+        }
+    }
+
+
 
 }
