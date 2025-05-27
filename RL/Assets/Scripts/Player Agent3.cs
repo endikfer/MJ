@@ -6,37 +6,31 @@ using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
 using Unity.VisualScripting;
 
-public class PlayerAgent : Agent
+public class PlayerAgent3 : Agent
 {
     public bool useVectorObs;
 
     private bool canJump = false;
-
     private bool hasArrive = false;
     private bool hasToArrive = false;
 
     private int currentLevel = 1;
     private int successStreak = 0;
-    private int totalLevels = 4;
+    private int totalLevels = 3; // Cambiado de 2 a 3
     public int successesRequired = 10;
+
     public bool button1 = false;
     public bool button2 = false;
-    public bool button3 = false;
-    public bool button4 = false;
 
     public Transform levelStartPosition;
     public Transform[] levelTargets;
-
     public Transform destino;
 
     public GameObject[] puertas;
-
     public GameObject[] pared;
 
     public GameObject boton1;
     public GameObject boton2;
-    public GameObject boton3;
-    public GameObject boton4;
 
     public Rigidbody rb;
 
@@ -54,9 +48,9 @@ public class PlayerAgent : Agent
 
         sensor.AddObservation(transform.position);
         sensor.AddObservation(boton1.transform.position);
-        sensor.AddObservation(boton2.transform.position);
-        sensor.AddObservation(boton3.transform.position);
-        sensor.AddObservation(boton4.transform.position);
+        sensor.AddObservation(boton2.transform.position - transform.position);
+        sensor.AddObservation(Vector3.zero);
+        sensor.AddObservation(Vector3.zero);
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
@@ -72,7 +66,6 @@ public class PlayerAgent : Agent
         var actionMove = actionBuffers.DiscreteActions[0];
         var actionRotate = actionBuffers.DiscreteActions[1];
         var actionJump = actionBuffers.DiscreteActions[2];
-        
 
         switch (actionMove)
         {
@@ -104,11 +97,11 @@ public class PlayerAgent : Agent
                 }
                 break;
         }
+
         Vector3 targetPosition = rb.position + dirToGo * Time.deltaTime;
         rb.MovePosition(targetPosition);
 
         PenalizeByDistanceToGoal();
-
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -138,7 +131,7 @@ public class PlayerAgent : Agent
 
     public override void OnEpisodeBegin()
     {
-        if (hasToArrive == true && hasArrive != true)
+        if (hasToArrive && !hasArrive)
         {
             currentLevel = 1;
             successStreak = 0;
@@ -152,23 +145,15 @@ public class PlayerAgent : Agent
             hasToArrive = true;
         }
 
-
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         button1 = false;
         button2 = false;
-        button3 = false;
-        button4 = false;
 
-        pared[0].SetActive(true);
-        pared[1].SetActive(true);
-        pared[2].SetActive(true);
-
+        foreach (var p in pared) p.SetActive(true);
         transform.localPosition = levelStartPosition.localPosition;
 
         currentDoorIndex = 0;
-
-
 
         if (camaraController != null && newCameraPositions.Length >= currentLevel - 1)
         {
@@ -180,18 +165,15 @@ public class PlayerAgent : Agent
             if (door.name == "puerta")
             {
                 Collider doorCol = door.GetComponent<Collider>();
-                if (doorCol != null)
-                {
-                    doorCol.isTrigger = true;
-                }
+                if (doorCol != null) doorCol.isTrigger = true;
             }
 
-            if(door.name == "Puerta" && door.GetComponent<Collider>().isTrigger == true)
+            if (door.name == "Puerta" && door.GetComponent<Collider>().isTrigger == true)
             {
                 door.GetComponent<Collider>().isTrigger = false;
-                
             }
-            if(door.name == "Door_3_Yellow" && door.GetComponentInChildren<Door>().open == true)
+
+            if (door.name == "Door_3_Yellow" && door.GetComponentInChildren<Door>().open == true)
             {
                 door.GetComponentInChildren<Door>().open = false;
                 door.GetComponentInChildren<Door>().CloseDoor();
@@ -199,12 +181,9 @@ public class PlayerAgent : Agent
         }
     }
 
-    // Puedes usar este método cuando detectes que el agente completó el objetivo correctamente
     public void RegisterSuccess()
     {
         successStreak++;
-
-
 
         if (successStreak >= successesRequired)
         {
@@ -213,11 +192,10 @@ public class PlayerAgent : Agent
                 currentLevel++;
                 successStreak = 0;
                 Debug.Log("¡Avanzas al nivel " + currentLevel + "!");
-                
             }
             else
             {
-                Debug.Log("¡Has completado todos los niveles!");
+                Debug.Log("¡Has completado el nivel " + totalLevels + ", fin del juego!");
                 AddReward(400.0f);
                 hasArrive = true;
             }
@@ -233,7 +211,6 @@ public class PlayerAgent : Agent
         EndEpisode();
     }
 
-    // Si el agente falla o no termina en MaxStep, llamas a esto
     public void RegisterFailure()
     {
         AddReward(-50.0f);
@@ -243,16 +220,35 @@ public class PlayerAgent : Agent
         EndEpisode();
     }
 
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Puerta"))
+        {
+            if (currentDoorIndex == 0)
+            {
+                int puerta = currentDoorIndex + 1;
+                Debug.Log("Puerta " + puerta + " atravesada.");
+            }
+            else if (currentDoorIndex == 1)
+            {
+                int puerta = currentDoorIndex + 1;
+                Debug.Log("Puerta " + puerta + " atravesada.");
+            }
+            else if (currentDoorIndex == 2)
+            {
+                int puerta = currentDoorIndex + 1;
+                Debug.Log("Puerta " + puerta + " atravesada.");
+            }
+        }
+    }
+
     public void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Puerta"))
         {
             Vector3 doorPosition = other.transform.position;
             Vector3 agentPosition = transform.position;
-
             float direction = agentPosition.x - doorPosition.x;
-
-            // Avance correcto si el agente se está moviendo hacia una menor X (hacia la siguiente puerta/nivel)
             bool isCorrectDirection = direction < 0;
 
             int doorsPerLevel = currentLevel;
@@ -263,7 +259,6 @@ public class PlayerAgent : Agent
 
                 if (currentDoorIndex < doorsPerLevel)
                 {
-                    // Cambiar cámara a la siguiente posición
                     int camIndex = Mathf.Min(currentDoorIndex, newCameraPositions.Length - 1);
                     if (camaraController != null)
                     {
@@ -272,33 +267,12 @@ public class PlayerAgent : Agent
                 }
                 else
                 {
-                    // Última puerta -> éxito
-                    RegisterSuccess();
-                }
-
-
-
-
-
-                if (currentDoorIndex == 3)
-                {
-                    Debug.Log("Puerta 3 atravesada.");
-                }
-                else if (currentDoorIndex == 4)
-                {
-                    Debug.Log("Puerta 4 atravesada.");
-                }
-                else if (currentDoorIndex == 2)
-                {
-                    Debug.Log("Puerta 2 atravesada.");
+                    RegisterSuccess(); // Última puerta
                 }
             }
 
-
-            // Solo cerrar puertas si ya avanzó al menos al nivel 2
             if (currentLevel > 1)
             {
-                // Solo cerramos la puerta si corresponde al nivel anterior
                 if (currentDoorIndex == 1)
                 {
                     other.GetComponent<Collider>().isTrigger = false;
@@ -314,11 +288,10 @@ public class PlayerAgent : Agent
         if (other.gameObject.CompareTag("Buton1"))
         {
             pared[0].SetActive(!pared[0].activeSelf);
-
-            if (button1 == false)
+            if (!button1)
             {
                 button1 = true;
-                AddReward(20.0f);
+                AddReward(100.0f);
                 Debug.Log("Boton 1 pulsado.");
             }
         }
@@ -329,25 +302,8 @@ public class PlayerAgent : Agent
             if (button2 == false)
             {
                 button2 = true;
-                AddReward(20.0f);
+                AddReward(100.0f);
                 Debug.Log("Boton 2 pulsado.");
-            }
-        }
-        if (other.gameObject.CompareTag("Buton3") || other.gameObject.CompareTag("Buton4"))
-        {
-            pared[2].SetActive(!pared[2].activeSelf);
-
-            if (button3 == false)
-            {
-                button3 = true;
-                AddReward(20.0f);
-                Debug.Log("Boton 3 pulsado.");
-            }
-            else if (button4 == false)
-            {
-                button4 = true;
-                AddReward(20.0f);
-                Debug.Log("Boton 4 pulsado.");
             }
         }
     }
@@ -358,7 +314,6 @@ public class PlayerAgent : Agent
         {
             canJump = true;
         }
-        
     }
 
     void OnCollisionExit(Collision collision)
@@ -374,9 +329,8 @@ public class PlayerAgent : Agent
         if (levelTargets.Length >= currentLevel)
         {
             float distance = Vector3.Distance(transform.position, destino.position);
-            float maxExpectedDistance = 45.68f;
+            float maxExpectedDistance = 33.47f;
             float normalizedPenalty = Mathf.Clamp01(distance / maxExpectedDistance);
-
             AddReward(-normalizedPenalty * 0.5f);
         }
     }

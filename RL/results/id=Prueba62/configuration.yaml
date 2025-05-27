@@ -36,9 +36,9 @@ behaviors:
           goal_conditioning_type: hyper
           deterministic: false
     init_path: null
-    keep_checkpoints: 5
+    keep_checkpoints: 20
     even_checkpoints: false
-    max_steps: 35000000
+    max_steps: 50000000
     time_horizon: 64
     summary_freq: 50000
     threaded: false
@@ -59,17 +59,17 @@ engine_settings:
   width: 84
   height: 84
   quality_level: 5
-  time_scale: 20
+  time_scale: 20.0
   target_frame_rate: -1
   capture_frame_rate: 60
   no_graphics: false
   no_graphics_monitor: false
 environment_parameters: null
 checkpoint_settings:
-  run_id: id=Prueba50
+  run_id: id=Prueba62
   initialize_from: null
   load_model: false
-  resume: false
+  resume: true
   force: false
   train_model: false
   inference: false

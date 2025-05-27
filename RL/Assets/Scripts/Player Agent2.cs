@@ -215,6 +215,18 @@ public class PlayerAgent2 : Agent
         EndEpisode();
     }
 
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Puerta"))
+        {
+            if (currentDoorIndex == 1)
+            {
+                int puerta = currentDoorIndex + 1;
+                Debug.Log("Puerta " + puerta + " atravesada.");
+            }   
+        }
+    }
+
     public void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Puerta"))
