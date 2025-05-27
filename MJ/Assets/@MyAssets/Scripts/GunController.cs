@@ -13,14 +13,13 @@ public class GunController : NetworkBehaviour
     public float bulletLifetime = 3f;
 
     [Header("Efectos Sin Partículas")]
-    public AudioClip shootSound;
+    public AudioSource gunAudio;
     public Light muzzleFlashLight;
     public float flashDuration = 0.1f;
     public float maxLightIntensity = 5f;
 
     private XRGrabInteractable grabInteractable;
     private float nextFireTime;
-    private AudioSource gunAudio;
     private float flashTimer;
     private Coroutine flashCoroutine;
 
@@ -29,7 +28,6 @@ public class GunController : NetworkBehaviour
         Debug.Log("[GunController] Inicializando arma");
 
         grabInteractable = GetComponent<XRGrabInteractable>();
-        gunAudio = GetComponent<AudioSource>();
 
         if (grabInteractable == null)
         {
@@ -39,6 +37,11 @@ public class GunController : NetworkBehaviour
         {
             grabInteractable.activated.AddListener(OnTriggerPulled);
             Debug.Log("[GunController] Listener de trigger añadido");
+        }
+
+        if (gunAudio == null)
+        {
+            Debug.LogError("[GunController] No se asignó el AudioSource en el inspector");
         }
 
         if (muzzleFlashLight != null)
@@ -59,7 +62,6 @@ public class GunController : NetworkBehaviour
             Shoot();
         }
 
-        // Apagar la luz del fogonazo después del tiempo determinado
         if (flashTimer > 0)
         {
             flashTimer -= Time.deltaTime;
@@ -86,6 +88,7 @@ public class GunController : NetworkBehaviour
         if (Time.time >= nextFireTime)
         {
             Debug.Log("[GunController] Disparo válido - Llamando al ServerRpc");
+
             if (bulletSpawnPoint == null)
             {
                 Debug.LogError("[GunController] ¡bulletSpawnPoint no está asignado!");
@@ -112,7 +115,6 @@ public class GunController : NetworkBehaviour
             return;
         }
 
-        Debug.Log($"[SERVER] Instanciando bala en posición: {position}");
         GameObject bullet = Instantiate(bulletPrefab, position, Quaternion.LookRotation(direction));
 
         if (bullet == null)
@@ -130,7 +132,6 @@ public class GunController : NetworkBehaviour
         }
 
         netObj.Spawn();
-        Debug.Log($"[SERVER] Bala spawneda con NetworkObjectId: {netObj.NetworkObjectId}");
 
         Rigidbody rb = bullet.GetComponent<Rigidbody>();
         if (rb == null)
@@ -140,10 +141,8 @@ public class GunController : NetworkBehaviour
         }
 
         rb.velocity = direction * bulletSpeed;
-        Debug.Log($"[SERVER] Velocidad de bala establecida: {rb.velocity}");
 
         Destroy(bullet, bulletLifetime);
-        Debug.Log($"[SERVER] Bala programada para destrucción en {bulletLifetime}s");
 
         PlayGunEffectsClientRpc();
     }
@@ -151,15 +150,13 @@ public class GunController : NetworkBehaviour
     [ClientRpc]
     private void PlayGunEffectsClientRpc()
     {
-        if (gunAudio != null && shootSound != null)
+        if (gunAudio != null)
         {
-            gunAudio.PlayOneShot(shootSound);
+            gunAudio.Play(); // Usa el AudioClip asignado en el AudioSource
         }
 
-        // Efecto de fogonazo
         StartMuzzleFlash();
 
-        // Notificar a otros clientes
         PlayMuzzleFlashClientRpc();
     }
 
@@ -171,8 +168,9 @@ public class GunController : NetworkBehaviour
             muzzleFlashLight.intensity = maxLightIntensity;
             flashTimer = flashDuration;
 
-            // Opcional: Efecto de decaimiento
-            if (flashCoroutine != null) StopCoroutine(flashCoroutine);
+            if (flashCoroutine != null)
+                StopCoroutine(flashCoroutine);
+
             flashCoroutine = StartCoroutine(DecayMuzzleFlash());
         }
     }
@@ -194,13 +192,12 @@ public class GunController : NetworkBehaviour
     [ClientRpc]
     private void PlayMuzzleFlashClientRpc()
     {
-        if (!IsOwner) // Solo ejecutar en otros clientes
+        if (!IsOwner)
         {
             StartMuzzleFlash();
         }
     }
 
-    // Método para visualizar el punto de spawn en el editor
     private void OnDrawGizmos()
     {
         if (bulletSpawnPoint != null)
