@@ -155,7 +155,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 1
+  m_CollisionDetection: 2
 --- !u!65 &1046469293297973119
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -341,7 +341,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 671982699
+  GlobalObjectIdHash: 3497988964
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -399,11 +399,12 @@ MonoBehaviour:
   bulletSpeed: 20
   fireRate: 0.5
   bulletLifetime: 3
-  gunAudio: {fileID: 6437625470443353434}
   muzzleFlashLight: {fileID: 187980142323973410}
   flashDuration: 0.1
   maxLightIntensity: 5
   muzzleFlashParticles: {fileID: 6735797425560743591}
+  gunAudio: {fileID: 6437625470443353434}
+  volume: 0.8
 --- !u!114 &-872494114251865983
 MonoBehaviour:
   m_ObjectHideFlags: 0

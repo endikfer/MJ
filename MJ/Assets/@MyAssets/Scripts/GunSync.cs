@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
+using Unity.Netcode.Components;
 using UnityEngine.XR.Interaction.Toolkit;
 
 [RequireComponent(typeof(Rigidbody), typeof(XRGrabInteractable))]
@@ -29,60 +30,73 @@ public class GunSync : NetworkBehaviour
 
     private void OnGrab(SelectEnterEventArgs args)
     {
-        if (!IsOwner)
-        {
-            RequestOwnershipServerRpc(NetworkManager.Singleton.LocalClientId);
-        }
+        if (!IsSpawned) return;
 
         attachTransform = args.interactorObject.transform;
+        RequestOwnershipServerRpc(NetworkManager.Singleton.LocalClientId);
         UpdateGrabState(true);
     }
 
     private void OnRelease(SelectExitEventArgs args)
     {
+        // Liberar ownership tanto para host como clientes
+        if (IsOwner)
+        {
+            ReleaseOwnershipServerRpc();
+        }
         UpdateGrabState(false);
         attachTransform = null;
+    }
+
+    [ServerRpc]
+    private void ReleaseOwnershipServerRpc()
+    {
+        // Asignar ownership al servidor (ID 0)
+        NetworkObject.ChangeOwnership(0);
+        currentOwnerId.Value = 0;
+        Debug.Log("Ownership liberado");
     }
 
     [ServerRpc(RequireOwnership = false)]
     private void RequestOwnershipServerRpc(ulong clientId)
     {
+        // Verificar que el objeto no está ya agarrado por otro jugador
+        if (currentOwnerId.Value != 0 && currentOwnerId.Value != clientId) return;
+
         NetworkObject.ChangeOwnership(clientId);
         currentOwnerId.Value = clientId;
     }
 
     private void UpdateGrabState(bool isGrabbed)
     {
-        if (IsOwner)
-        {
-            rb.isKinematic = isGrabbed;
-            rb.useGravity = !isGrabbed;
+        rb.isKinematic = isGrabbed;
+        rb.useGravity = !isGrabbed;
 
-            if (!isGrabbed)
+        if (!isGrabbed)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+
+            // Forzar sincronización de posición al soltar
+            if (TryGetComponent<NetworkTransform>(out var netTransform))
             {
-                rb.velocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
+                netTransform.Teleport(transform.position, transform.rotation, transform.localScale);
             }
         }
     }
 
     private void Update()
     {
-        if (attachTransform != null)
+        if (attachTransform != null && IsOwner)
         {
-            if (IsOwner)
-            {
-                // Actualización precisa para el dueño
-                transform.position = attachTransform.position;
-                transform.rotation = attachTransform.rotation;
-                UpdatePositionServerRpc(transform.position, transform.rotation);
-            }
-            else
-            {
-                // Interpolación suave para clientes remotos
-                transform.position = Vector3.Lerp(transform.position, networkPosition.Value, 15f * Time.deltaTime);
-                transform.rotation = Quaternion.Slerp(transform.rotation, networkRotation.Value, 15f * Time.deltaTime);
-            }
+            transform.position = attachTransform.position;
+            transform.rotation = attachTransform.rotation;
+            UpdatePositionServerRpc(transform.position, transform.rotation);
+        }
+        else if (attachTransform != null)
+        {
+            transform.position = Vector3.Lerp(transform.position, networkPosition.Value, 15f * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, networkRotation.Value, 15f * Time.deltaTime);
         }
     }
 
@@ -122,5 +136,11 @@ public class GunSync : NetworkBehaviour
             rb.MovePosition(attachTransform.position);
             rb.MoveRotation(attachTransform.rotation);
         }
+    }
+
+    private void OnDestroy()
+    {
+        networkPosition.OnValueChanged -= OnPositionChanged;
+        networkRotation.OnValueChanged -= OnRotationChanged;
     }
 }

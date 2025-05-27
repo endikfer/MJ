@@ -1,7 +1,8 @@
 using UnityEngine;
 using Unity.Netcode;
-using System.Collections;
 using UnityEngine.XR.Interaction.Toolkit;
+using System.Collections;
+using Unity.Netcode.Components;
 
 public class GunController : NetworkBehaviour
 {
@@ -12,14 +13,15 @@ public class GunController : NetworkBehaviour
     public float fireRate = 0.5f;
     public float bulletLifetime = 3f;
 
-    [Header("Efectos Sin Partículas")]
-    public AudioSource gunAudio;
+    [Header("Efectos Visuales")]
     public Light muzzleFlashLight;
-    public float flashDuration = 0.1f;
+    public float flashDuration = 0.07f;
     public float maxLightIntensity = 5f;
-
-    [Header("Partículas")]
     public ParticleSystem muzzleFlashParticles;
+
+    [Header("Efectos de Audio")]
+    public AudioSource gunAudio;
+    [Range(0, 1)] public float volume = 0.8f;
 
     private XRGrabInteractable grabInteractable;
     private float nextFireTime;
@@ -28,41 +30,33 @@ public class GunController : NetworkBehaviour
 
     private void Awake()
     {
-        Debug.Log("[GunController] Inicializando arma");
-
         grabInteractable = GetComponent<XRGrabInteractable>();
-
-        if (grabInteractable == null)
-        {
-            Debug.LogError("[GunController] No se encontró XRGrabInteractable en el objeto");
-        }
-        else
-        {
-            grabInteractable.activated.AddListener(OnTriggerPulled);
-            Debug.Log("[GunController] Listener de trigger añadido");
-        }
 
         if (gunAudio == null)
         {
-            Debug.LogError("[GunController] No se asignó el AudioSource en el inspector");
+            gunAudio = GetComponent<AudioSource>();
+            if (gunAudio == null)
+            {
+                Debug.LogError("No se encontró AudioSource en el arma");
+            }
         }
 
         if (muzzleFlashLight != null)
         {
             muzzleFlashLight.enabled = false;
         }
-        else
-        {
-            Debug.LogWarning("[GunController] No hay luz de fogonazo asignada");
-        }
+    }
+
+    private void Start()
+    {
+        grabInteractable.activated.AddListener(OnTriggerPulled);
     }
 
     private void Update()
     {
         if (IsOwner && Input.GetMouseButtonDown(0))
         {
-            Debug.Log("[GunController] Click izquierdo detectado (Owner)");
-            Shoot();
+            TryShoot();
         }
 
         if (flashTimer > 0)
@@ -77,116 +71,76 @@ public class GunController : NetworkBehaviour
 
     private void OnTriggerPulled(ActivateEventArgs arg)
     {
-        Debug.Log("[GunController] Trigger del controlador VR activado");
-        if (!IsOwner)
-        {
-            Debug.LogWarning("[GunController] Intento de disparo pero no somos owners");
-            return;
-        }
-        Shoot();
-    }
-
-    private void Shoot()
-    {
-        if (Time.time >= nextFireTime)
-        {
-            Debug.Log("[GunController] Disparo válido - Llamando al ServerRpc");
-
-            if (bulletSpawnPoint == null)
-            {
-                Debug.LogError("[GunController] ¡bulletSpawnPoint no está asignado!");
-                return;
-            }
-
-            FireBulletServerRpc(bulletSpawnPoint.position, bulletSpawnPoint.forward);
-            nextFireTime = Time.time + fireRate;
-        }
-        else
-        {
-            Debug.Log($"[GunController] En enfriamiento. Tiempo restante: {nextFireTime - Time.time}s");
-        }
+        if (!IsOwner) return;
+        TryShoot();
     }
 
     [ServerRpc]
     private void FireBulletServerRpc(Vector3 position, Vector3 direction)
     {
-        Debug.Log("[SERVER] Recibido FireBulletServerRpc");
-
-        if (bulletPrefab == null)
-        {
-            Debug.LogError("[SERVER] ¡bulletPrefab no está asignado!");
-            return;
-        }
+        if (!IsSpawned) return; // Verificar que el arma está spawneda
+        if (bulletPrefab == null) return;
 
         GameObject bullet = Instantiate(bulletPrefab, position, Quaternion.LookRotation(direction));
+        NetworkObject bulletNetObj = bullet.GetComponent<NetworkObject>();
 
-        if (bullet == null)
+        // Configuración de física mejorada
+        if (bullet.TryGetComponent<Rigidbody>(out var rb))
         {
-            Debug.LogError("[SERVER] Fallo al instanciar la bala");
-            return;
+            rb.velocity = direction * bulletSpeed;
+            rb.interpolation = RigidbodyInterpolation.Interpolate;
+            rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+            rb.useGravity = false;
         }
 
-        NetworkObject netObj = bullet.GetComponent<NetworkObject>();
-        if (netObj == null)
+        bulletNetObj.SpawnWithOwnership(OwnerClientId, true);
+
+        // Configurar NetworkTransform para mejor sincronización
+        if (bullet.TryGetComponent<NetworkTransform>(out var netTransform))
         {
-            Debug.LogError("[SERVER] La bala no tiene NetworkObject");
-            Destroy(bullet);
-            return;
+            netTransform.InLocalSpace = false;
         }
-
-        netObj.Spawn();
-
-        Rigidbody rb = bullet.GetComponent<Rigidbody>();
-        if (rb == null)
-        {
-            Debug.LogError("[SERVER] La bala no tiene Rigidbody");
-            return;
-        }
-
-        rb.velocity = direction * bulletSpeed;
 
         Destroy(bullet, bulletLifetime);
+        PlayShootEffectsClientRpc();
+    }
 
-        PlayGunEffectsClientRpc();
+    private void TryShoot()
+    {
+        // Verificación adicional de ownership
+        if (Time.time >= nextFireTime && IsOwner && bulletSpawnPoint != null && grabInteractable.isSelected)
+        {
+            FireBulletServerRpc(bulletSpawnPoint.position, bulletSpawnPoint.forward);
+            nextFireTime = Time.time + fireRate;
+        }
     }
 
     [ClientRpc]
-    private void PlayGunEffectsClientRpc()
+    private void PlayShootEffectsClientRpc()
     {
-        if (gunAudio != null)
-        {
-            gunAudio.Play(); // Usa el AudioClip asignado en el AudioSource
-        }
-
-        StartMuzzleFlash();
-
-        PlayMuzzleFlashClientRpc();
+        StartCoroutine(HandleShootEffects());
     }
 
-    private void StartMuzzleFlash()
+    private IEnumerator HandleShootEffects()
     {
+        if (gunAudio != null && gunAudio.clip != null)
+        {
+            gunAudio.PlayOneShot(gunAudio.clip, volume);
+        }
+
         if (muzzleFlashLight != null)
         {
             muzzleFlashLight.enabled = true;
             muzzleFlashLight.intensity = maxLightIntensity;
             flashTimer = flashDuration;
-
-            if (flashCoroutine != null)
-                StopCoroutine(flashCoroutine);
-
-            flashCoroutine = StartCoroutine(DecayMuzzleFlash());
         }
 
-        // NUEVO: Reproducir partículas
         if (muzzleFlashParticles != null)
         {
             muzzleFlashParticles.Stop();
             muzzleFlashParticles.Play();
         }
-    }
 
-    private IEnumerator DecayMuzzleFlash()
-    {
         float elapsed = 0f;
         while (elapsed < flashDuration)
         {
@@ -197,14 +151,10 @@ public class GunController : NetworkBehaviour
             elapsed += Time.deltaTime;
             yield return null;
         }
-    }
 
-    [ClientRpc]
-    private void PlayMuzzleFlashClientRpc()
-    {
-        if (!IsOwner)
+        if (muzzleFlashLight != null)
         {
-            StartMuzzleFlash();
+            muzzleFlashLight.enabled = false;
         }
     }
 
