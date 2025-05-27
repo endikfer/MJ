@@ -450,6 +450,11 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: d0e287593f91f3e4f87cb98b854a5c92,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: c054adcd167f2ab499e03bf461f54c7a, type: 2}
     - target: {fileID: 6240733294840144465, guid: d0e287593f91f3e4f87cb98b854a5c92,
         type: 3}
       propertyPath: m_Layer
@@ -569,7 +574,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1169737683
+  GlobalObjectIdHash: 758135094
   InScenePlacedSourceGlobalObjectIdHash: 2838299485
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
