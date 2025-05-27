@@ -18,6 +18,9 @@ public class GunController : NetworkBehaviour
     public float flashDuration = 0.1f;
     public float maxLightIntensity = 5f;
 
+    [Header("Partículas")]
+    public ParticleSystem muzzleFlashParticles;
+
     private XRGrabInteractable grabInteractable;
     private float nextFireTime;
     private float flashTimer;
@@ -172,6 +175,13 @@ public class GunController : NetworkBehaviour
                 StopCoroutine(flashCoroutine);
 
             flashCoroutine = StartCoroutine(DecayMuzzleFlash());
+        }
+
+        // NUEVO: Reproducir partículas
+        if (muzzleFlashParticles != null)
+        {
+            muzzleFlashParticles.Stop();
+            muzzleFlashParticles.Play();
         }
     }
 
