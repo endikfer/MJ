@@ -9800,7 +9800,6 @@ GameObject:
   - component: {fileID: 2026886636}
   - component: {fileID: 2026886635}
   - component: {fileID: 2026886637}
-  - component: {fileID: 2026886638}
   m_Layer: 0
   m_Name: Teleport2
   m_TagString: Untagged
@@ -9865,19 +9864,6 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &2026886638
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2026886634}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7a9fe8678a33bc47aa2739f57d6ff74, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  teleportTarget: {fileID: 198611754}
 --- !u!1001 &2026928812
 PrefabInstance:
   m_ObjectHideFlags: 0

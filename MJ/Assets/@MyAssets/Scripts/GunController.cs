@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.XR.Interaction.Toolkit;
 using System.Collections;
@@ -6,7 +6,7 @@ using Unity.Netcode.Components;
 
 public class GunController : NetworkBehaviour
 {
-    [Header("Configuración Básica")]
+    [Header("ConfiguraciÃ³n BÃ¡sica")]
     public Transform bulletSpawnPoint;
     public GameObject bulletPrefab;
     public float bulletSpeed = 20f;
@@ -35,10 +35,6 @@ public class GunController : NetworkBehaviour
         if (gunAudio == null)
         {
             gunAudio = GetComponent<AudioSource>();
-            if (gunAudio == null)
-            {
-                Debug.LogError("No se encontró AudioSource en el arma");
-            }
         }
 
         if (muzzleFlashLight != null)
@@ -76,41 +72,29 @@ public class GunController : NetworkBehaviour
     }
 
     [ServerRpc]
-    private void FireBulletServerRpc(Vector3 position, Vector3 direction)
+    private void FireBulletServerRpc(Vector3 position, Vector3 direction, Quaternion rotation)
     {
-        if (!IsSpawned) return; // Verificar que el arma está spawneda
-        if (bulletPrefab == null) return;
+        if (!IsSpawned || bulletPrefab == null) return;
 
-        GameObject bullet = Instantiate(bulletPrefab, position, Quaternion.LookRotation(direction));
-        NetworkObject bulletNetObj = bullet.GetComponent<NetworkObject>();
+        GameObject bullet = Instantiate(bulletPrefab, position, rotation);
+        bullet.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
 
-        // Configuración de física mejorada
+        // Asegurar que la bala comienza con la velocidad correcta
         if (bullet.TryGetComponent<Rigidbody>(out var rb))
         {
             rb.velocity = direction * bulletSpeed;
-            rb.interpolation = RigidbodyInterpolation.Interpolate;
-            rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
-            rb.useGravity = false;
         }
-
-        bulletNetObj.SpawnWithOwnership(OwnerClientId, true);
-
-        // Configurar NetworkTransform para mejor sincronización
-        if (bullet.TryGetComponent<NetworkTransform>(out var netTransform))
-        {
-            netTransform.InLocalSpace = false;
-        }
-
-        Destroy(bullet, bulletLifetime);
-        PlayShootEffectsClientRpc();
     }
 
     private void TryShoot()
     {
-        // Verificación adicional de ownership
-        if (Time.time >= nextFireTime && IsOwner && bulletSpawnPoint != null && grabInteractable.isSelected)
+        if (Time.time >= nextFireTime && IsOwner && bulletSpawnPoint != null)
         {
-            FireBulletServerRpc(bulletSpawnPoint.position, bulletSpawnPoint.forward);
+            FireBulletServerRpc(
+                bulletSpawnPoint.position,
+                bulletSpawnPoint.forward,
+                bulletSpawnPoint.rotation
+            );
             nextFireTime = Time.time + fireRate;
         }
     }
@@ -162,9 +146,9 @@ public class GunController : NetworkBehaviour
     {
         if (bulletSpawnPoint != null)
         {
-            Gizmos.color = Color.red;
+            Gizmos.color = Color.green;
             Gizmos.DrawSphere(bulletSpawnPoint.position, 0.05f);
-            Gizmos.DrawLine(bulletSpawnPoint.position, bulletSpawnPoint.position + bulletSpawnPoint.forward * 0.5f);
+            Gizmos.DrawLine(bulletSpawnPoint.position, bulletSpawnPoint.position + bulletSpawnPoint.forward * 0.2f);
         }
     }
 }

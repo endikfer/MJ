@@ -39,7 +39,6 @@ public class GunSync : NetworkBehaviour
 
     private void OnRelease(SelectExitEventArgs args)
     {
-        // Liberar ownership tanto para host como clientes
         if (IsOwner)
         {
             ReleaseOwnershipServerRpc();
@@ -51,7 +50,6 @@ public class GunSync : NetworkBehaviour
     [ServerRpc]
     private void ReleaseOwnershipServerRpc()
     {
-        // Asignar ownership al servidor (ID 0)
         NetworkObject.ChangeOwnership(0);
         currentOwnerId.Value = 0;
         Debug.Log("Ownership liberado");
@@ -60,7 +58,6 @@ public class GunSync : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void RequestOwnershipServerRpc(ulong clientId)
     {
-        // Verificar que el objeto no está ya agarrado por otro jugador
         if (currentOwnerId.Value != 0 && currentOwnerId.Value != clientId) return;
 
         NetworkObject.ChangeOwnership(clientId);
@@ -77,7 +74,6 @@ public class GunSync : NetworkBehaviour
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
 
-            // Forzar sincronización de posición al soltar
             if (TryGetComponent<NetworkTransform>(out var netTransform))
             {
                 netTransform.Teleport(transform.position, transform.rotation, transform.localScale);
