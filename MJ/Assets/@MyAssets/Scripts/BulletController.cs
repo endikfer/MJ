@@ -7,7 +7,6 @@ public class BulletController : NetworkBehaviour
 {
     public float speed = 30f;
     public float lifetime = 3f;
-
     private Rigidbody rb;
     private bool velocityApplied = false;
 
@@ -40,6 +39,28 @@ public class BulletController : NetworkBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!IsServer) return;
+
+        // Evitar autoimpacto
+        NetworkObject playerObj = other.GetComponent<NetworkObject>();
+        if (playerObj != null && playerObj.OwnerClientId == OwnerClientId)
+            return;
+
+        // Detectar si es un jugador (usando layer)
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
+            PlayerLife life = other.GetComponent<PlayerLife>();
+            if (life != null)
+            {
+                life.TakeDamage(10f); // Dañar al jugador
+            }
+        }
+
+        DestroyBullet();
+    }
+
     private void DestroyBullet()
     {
         if (IsServer && IsSpawned)
@@ -47,16 +68,5 @@ public class BulletController : NetworkBehaviour
             NetworkObject.Despawn(true);
             Destroy(gameObject);
         }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (!IsServer) return;
-
-        NetworkObject playerObj = other.GetComponent<NetworkObject>();
-        if (playerObj != null && playerObj.OwnerClientId == OwnerClientId)
-            return;
-
-        DestroyBullet();
     }
 }

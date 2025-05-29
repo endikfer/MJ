@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
+using Unity.Netcode;
 
 public class PlayerLife : NetworkBehaviour
 {
@@ -16,23 +14,28 @@ public class PlayerLife : NetworkBehaviour
 
     public void TakeDamage(float amount)
     {
-        currentHealth -= amount;
+        if (!IsServer) return;
 
+        currentHealth -= amount;
         if (currentHealth <= 0)
         {
+            currentHealth = 0;
             Die();
         }
+
+        UpdateHealthClientRpc(currentHealth);
     }
 
     public void Heal(float amount)
     {
+        if (!IsServer) return;
+
         currentHealth += amount;
         if (currentHealth > maxHealth)
         {
             currentHealth = maxHealth;
         }
 
-        // Notifica a todos los clientes que actualicen su valor local de vida
         UpdateHealthClientRpc(currentHealth);
     }
 
@@ -52,30 +55,23 @@ public class PlayerLife : NetworkBehaviour
 
     void Update()
     {
-        // Ejemplo: Presiona 'm' para recibir daño, 'n' para curarse
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            TakeDamage(10);
-        }
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            Heal(10);
-        }
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.M)) TakeDamage(10);
+        if (Input.GetKeyDown(KeyCode.N)) Heal(10);
+#endif
     }
 
     [ClientRpc]
     void UpdateHealthClientRpc(float newHealth)
     {
         currentHealth = newHealth;
-
-        // Aquí puedes actualizar UI si tienes barra de vida
         Debug.Log($"[CLIENT RPC] Nueva vida: {currentHealth}");
+        // Aquí puedes actualizar una UI si es necesario
     }
 
     [Rpc(SendTo.Server)]
     private void NotifyDeathToServerRpc()
     {
-        // El servidor maneja quién murió
         FullGameManager.Instance.HandlePlayerDeathServerRpc(OwnerClientId);
     }
 }
