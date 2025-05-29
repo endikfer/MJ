@@ -8,7 +8,6 @@ public class BulletController : NetworkBehaviour
     public float speed = 30f;
     public float lifetime = 3f;
     private Rigidbody rb;
-    private bool velocityApplied = false;
 
     private void Awake()
     {
@@ -20,7 +19,6 @@ public class BulletController : NetworkBehaviour
         if (IsServer)
         {
             rb.velocity = transform.forward * speed;
-            velocityApplied = true;
             Invoke(nameof(DestroyBullet), lifetime);
         }
         else
@@ -30,31 +28,17 @@ public class BulletController : NetworkBehaviour
         }
     }
 
-    private void FixedUpdate()
-    {
-        if (IsServer && !velocityApplied)
-        {
-            rb.velocity = transform.forward * speed;
-            velocityApplied = true;
-        }
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (!IsServer) return;
 
-        // Evitar autoimpacto
-        NetworkObject playerObj = other.GetComponent<NetworkObject>();
-        if (playerObj != null && playerObj.OwnerClientId == OwnerClientId)
-            return;
-
-        // Detectar si es un jugador (usando layer)
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            PlayerLife life = other.GetComponent<PlayerLife>();
-            if (life != null)
+            PlayerLife playerLife = other.GetComponentInParent<PlayerLife>();
+            if (playerLife != null)
             {
-                life.TakeDamage(10f); // Dañar al jugador
+                Debug.Log($"[SERVER] Bullet hit player {playerLife.OwnerClientId}");
+                playerLife.TakeDamage(10f);
             }
         }
 
@@ -65,7 +49,7 @@ public class BulletController : NetworkBehaviour
     {
         if (IsServer && IsSpawned)
         {
-            NetworkObject.Despawn(true);
+            NetworkObject.Despawn();
             Destroy(gameObject);
         }
     }

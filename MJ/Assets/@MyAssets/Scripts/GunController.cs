@@ -28,12 +28,8 @@ public class GunController : NetworkBehaviour
     private void Awake()
     {
         grabInteractable = GetComponent<XRGrabInteractable>();
-
-        if (gunAudio == null)
-            gunAudio = GetComponent<AudioSource>();
-
-        if (muzzleFlashLight != null)
-            muzzleFlashLight.enabled = false;
+        if (gunAudio == null) gunAudio = GetComponent<AudioSource>();
+        if (muzzleFlashLight != null) muzzleFlashLight.enabled = false;
     }
 
     private void Start()
@@ -55,6 +51,7 @@ public class GunController : NetworkBehaviour
 
     private void OnTriggerPulled(ActivateEventArgs arg)
     {
+        if (!IsOwner) return;
         TryShoot();
     }
 
@@ -71,31 +68,22 @@ public class GunController : NetworkBehaviour
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void FireBulletServerRpc(Vector3 position, Vector3 direction, Quaternion rotation, ServerRpcParams rpcParams = default)
+    [ServerRpc]
+    private void FireBulletServerRpc(Vector3 position, Vector3 direction, Quaternion rotation)
     {
         if (!IsSpawned || bulletPrefab == null) return;
 
-        // Asegurarse que solo dispara el dueño actual
-        if (NetworkObject.OwnerClientId != rpcParams.Receive.SenderClientId)
-            return;
-
         GameObject bullet = Instantiate(bulletPrefab, position, rotation);
         var netObj = bullet.GetComponent<NetworkObject>();
-        netObj.Spawn();
+        netObj.SpawnWithOwnership(OwnerClientId);
 
-        StartCoroutine(SetBulletVelocity(bullet, direction));
-        PlayShootEffectsClientRpc();
-    }
-
-    private IEnumerator SetBulletVelocity(GameObject bullet, Vector3 direction)
-    {
-        yield return new WaitForEndOfFrame();
-
-        if (bullet != null && bullet.TryGetComponent<Rigidbody>(out var rb))
+        Rigidbody rb = bullet.GetComponent<Rigidbody>();
+        if (rb != null)
         {
             rb.velocity = direction * bulletSpeed;
         }
+
+        PlayShootEffectsClientRpc();
     }
 
     [ClientRpc]
@@ -107,9 +95,7 @@ public class GunController : NetworkBehaviour
     private IEnumerator HandleShootEffects()
     {
         if (gunAudio != null && gunAudio.clip != null)
-        {
             gunAudio.PlayOneShot(gunAudio.clip, volume);
-        }
 
         if (muzzleFlashLight != null)
         {
@@ -138,16 +124,6 @@ public class GunController : NetworkBehaviour
         if (muzzleFlashLight != null)
         {
             muzzleFlashLight.enabled = false;
-        }
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (bulletSpawnPoint != null)
-        {
-            Gizmos.color = Color.green;
-            Gizmos.DrawSphere(bulletSpawnPoint.position, 0.05f);
-            Gizmos.DrawLine(bulletSpawnPoint.position, bulletSpawnPoint.position + bulletSpawnPoint.forward * 0.2f);
         }
     }
 }

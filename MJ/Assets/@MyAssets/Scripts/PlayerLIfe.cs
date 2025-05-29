@@ -7,7 +7,7 @@ public class PlayerLife : NetworkBehaviour
     private float currentHealth;
     public AnimatorController animator;
 
-    void Start()
+    private void Start()
     {
         currentHealth = maxHealth;
     }
@@ -17,9 +17,10 @@ public class PlayerLife : NetworkBehaviour
         if (!IsServer) return;
 
         currentHealth -= amount;
-        if (currentHealth <= 0)
+        Debug.Log($"[SERVER] Player {OwnerClientId} took {amount} damage. Health: {currentHealth}");
+
+        if (currentHealth <= 0f)
         {
-            currentHealth = 0;
             Die();
         }
 
@@ -30,48 +31,38 @@ public class PlayerLife : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        currentHealth += amount;
-        if (currentHealth > maxHealth)
-        {
-            currentHealth = maxHealth;
-        }
-
+        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
         UpdateHealthClientRpc(currentHealth);
     }
 
-    public void Die()
+    private void Die()
     {
-        animator.Die();
+        animator?.Die();
+
         if (IsOwner)
         {
             NotifyDeathToServerRpc();
         }
     }
 
-    public float GetCurrentHealth()
-    {
-        return currentHealth;
-    }
-
-    void Update()
-    {
-#if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.M)) TakeDamage(10);
-        if (Input.GetKeyDown(KeyCode.N)) Heal(10);
-#endif
-    }
-
     [ClientRpc]
-    void UpdateHealthClientRpc(float newHealth)
+    private void UpdateHealthClientRpc(float newHealth)
     {
         currentHealth = newHealth;
-        Debug.Log($"[CLIENT RPC] Nueva vida: {currentHealth}");
-        // Aquí puedes actualizar una UI si es necesario
+        Debug.Log($"[CLIENT {OwnerClientId}] Health updated: {currentHealth}");
     }
 
     [Rpc(SendTo.Server)]
     private void NotifyDeathToServerRpc()
     {
-        FullGameManager.Instance.HandlePlayerDeathServerRpc(OwnerClientId);
+        Debug.Log($"[SERVER] Player {OwnerClientId} died.");
+        FullGameManager.Instance?.HandlePlayerDeathServerRpc(OwnerClientId);
+    }
+
+    //Este método es necesario para CanvasManager
+    public float GetCurrentHealth()
+    {
+        return currentHealth;
     }
 }
+
