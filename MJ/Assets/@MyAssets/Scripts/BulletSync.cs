@@ -23,8 +23,9 @@ public class BulletSync : NetworkBehaviour
         }
         else
         {
-            rb.isKinematic = true;
-            transform.position = networkPosition.Value;
+            // Eliminar Rigidbody en clientes para evitar conflictos
+            Destroy(rb);
+            rb = null;
         }
     }
 
@@ -37,9 +38,12 @@ public class BulletSync : NetworkBehaviour
         }
         else
         {
-            // Movimiento en clientes
-            transform.position = networkPosition.Value;
-            transform.forward = networkVelocity.Value.normalized;
+            // Movimiento en clientes usando datos de red
+            if (rb == null)
+            {
+                transform.position = networkPosition.Value;
+                transform.forward = networkVelocity.Value.normalized;
+            }
         }
     }
 }

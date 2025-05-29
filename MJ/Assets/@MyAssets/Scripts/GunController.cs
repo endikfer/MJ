@@ -2,7 +2,6 @@
 using Unity.Netcode;
 using UnityEngine.XR.Interaction.Toolkit;
 using System.Collections;
-using Unity.Netcode.Components;
 
 public class GunController : NetworkBehaviour
 {
@@ -11,7 +10,6 @@ public class GunController : NetworkBehaviour
     public GameObject bulletPrefab;
     public float bulletSpeed = 20f;
     public float fireRate = 0.5f;
-    public float bulletLifetime = 3f;
 
     [Header("Efectos Visuales")]
     public Light muzzleFlashLight;
@@ -26,21 +24,16 @@ public class GunController : NetworkBehaviour
     private XRGrabInteractable grabInteractable;
     private float nextFireTime;
     private float flashTimer;
-    private Coroutine flashCoroutine;
 
     private void Awake()
     {
         grabInteractable = GetComponent<XRGrabInteractable>();
 
         if (gunAudio == null)
-        {
             gunAudio = GetComponent<AudioSource>();
-        }
 
         if (muzzleFlashLight != null)
-        {
             muzzleFlashLight.enabled = false;
-        }
     }
 
     private void Start()
@@ -50,11 +43,6 @@ public class GunController : NetworkBehaviour
 
     private void Update()
     {
-        if (IsOwner && Input.GetMouseButtonDown(0))
-        {
-            TryShoot();
-        }
-
         if (flashTimer > 0)
         {
             flashTimer -= Time.deltaTime;
@@ -67,28 +55,12 @@ public class GunController : NetworkBehaviour
 
     private void OnTriggerPulled(ActivateEventArgs arg)
     {
-        if (!IsOwner) return;
         TryShoot();
-    }
-
-    [ServerRpc]
-    private void FireBulletServerRpc(Vector3 position, Vector3 direction, Quaternion rotation)
-    {
-        if (!IsSpawned || bulletPrefab == null) return;
-
-        GameObject bullet = Instantiate(bulletPrefab, position, rotation);
-        bullet.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
-
-        // Asegurar que la bala comienza con la velocidad correcta
-        if (bullet.TryGetComponent<Rigidbody>(out var rb))
-        {
-            rb.velocity = direction * bulletSpeed;
-        }
     }
 
     private void TryShoot()
     {
-        if (Time.time >= nextFireTime && IsOwner && bulletSpawnPoint != null)
+        if (Time.time >= nextFireTime && bulletSpawnPoint != null)
         {
             FireBulletServerRpc(
                 bulletSpawnPoint.position,
@@ -96,6 +68,33 @@ public class GunController : NetworkBehaviour
                 bulletSpawnPoint.rotation
             );
             nextFireTime = Time.time + fireRate;
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void FireBulletServerRpc(Vector3 position, Vector3 direction, Quaternion rotation, ServerRpcParams rpcParams = default)
+    {
+        if (!IsSpawned || bulletPrefab == null) return;
+
+        // Asegurarse que solo dispara el dueño actual
+        if (NetworkObject.OwnerClientId != rpcParams.Receive.SenderClientId)
+            return;
+
+        GameObject bullet = Instantiate(bulletPrefab, position, rotation);
+        var netObj = bullet.GetComponent<NetworkObject>();
+        netObj.Spawn();
+
+        StartCoroutine(SetBulletVelocity(bullet, direction));
+        PlayShootEffectsClientRpc();
+    }
+
+    private IEnumerator SetBulletVelocity(GameObject bullet, Vector3 direction)
+    {
+        yield return new WaitForEndOfFrame();
+
+        if (bullet != null && bullet.TryGetComponent<Rigidbody>(out var rb))
+        {
+            rb.velocity = direction * bulletSpeed;
         }
     }
 

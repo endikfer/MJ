@@ -1,19 +1,42 @@
 using UnityEngine;
 using Unity.Netcode;
+using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 
-[RequireComponent(typeof(BulletSync), typeof(Rigidbody))]
+[RequireComponent(typeof(Rigidbody), typeof(ClientNetworkTransform))]
 public class BulletController : NetworkBehaviour
 {
     public float speed = 30f;
     public float lifetime = 3f;
 
-    private void Start()
+    private Rigidbody rb;
+    private bool velocityApplied = false;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
+
+    public override void OnNetworkSpawn()
     {
         if (IsServer)
         {
-            // Solo el servidor aplica física
-            GetComponent<Rigidbody>().velocity = transform.forward * speed;
+            rb.velocity = transform.forward * speed;
+            velocityApplied = true;
             Invoke(nameof(DestroyBullet), lifetime);
+        }
+        else
+        {
+            rb.isKinematic = true;
+            rb.detectCollisions = false;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (IsServer && !velocityApplied)
+        {
+            rb.velocity = transform.forward * speed;
+            velocityApplied = true;
         }
     }
 
@@ -29,6 +52,11 @@ public class BulletController : NetworkBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!IsServer) return;
+
+        NetworkObject playerObj = other.GetComponent<NetworkObject>();
+        if (playerObj != null && playerObj.OwnerClientId == OwnerClientId)
+            return;
+
         DestroyBullet();
     }
 }
