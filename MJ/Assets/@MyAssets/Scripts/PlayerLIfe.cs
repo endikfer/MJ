@@ -13,9 +13,11 @@ public class PlayerLife : NetworkBehaviour
 
     public void TakeDamage(float amount)
     {
-        if (!IsServer) return;
+
+        //if (!IsServer) return;
 
         currentHealth -= amount;
+
         Debug.Log($"[Server] Player {OwnerClientId} took {amount} damage, health: {currentHealth}");
 
         if (currentHealth <= 0)
@@ -38,6 +40,12 @@ public class PlayerLife : NetworkBehaviour
 
     private void Die()
     {
+
+        if (IsServer)
+        {
+            FullGameManager.Instance.HandlePlayerDeathServerRpc(OwnerClientId);
+        }
+
         Debug.Log($"[Server] Player {OwnerClientId} has died.");
         // Aquí podrías reiniciar la posición, animación, etc.
     }
