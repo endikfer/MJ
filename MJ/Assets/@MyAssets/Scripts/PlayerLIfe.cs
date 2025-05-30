@@ -5,7 +5,6 @@ public class PlayerLife : NetworkBehaviour
 {
     public float maxHealth = 100f;
     private float currentHealth;
-    public AnimatorController animator;
 
     private void Start()
     {
@@ -17,9 +16,9 @@ public class PlayerLife : NetworkBehaviour
         if (!IsServer) return;
 
         currentHealth -= amount;
-        Debug.Log($"[SERVER] Player {OwnerClientId} took {amount} damage. Health: {currentHealth}");
+        Debug.Log($"[Server] Player {OwnerClientId} took {amount} damage, health: {currentHealth}");
 
-        if (currentHealth <= 0f)
+        if (currentHealth <= 0)
         {
             Die();
         }
@@ -31,38 +30,23 @@ public class PlayerLife : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+        currentHealth += amount;
+        if (currentHealth > maxHealth) currentHealth = maxHealth;
+
         UpdateHealthClientRpc(currentHealth);
     }
 
     private void Die()
     {
-        animator?.Die();
-
-        if (IsOwner)
-        {
-            NotifyDeathToServerRpc();
-        }
+        Debug.Log($"[Server] Player {OwnerClientId} has died.");
+        // Aquí podrías reiniciar la posición, animación, etc.
     }
 
     [ClientRpc]
     private void UpdateHealthClientRpc(float newHealth)
     {
         currentHealth = newHealth;
-        Debug.Log($"[CLIENT {OwnerClientId}] Health updated: {currentHealth}");
     }
 
-    [Rpc(SendTo.Server)]
-    private void NotifyDeathToServerRpc()
-    {
-        Debug.Log($"[SERVER] Player {OwnerClientId} died.");
-        FullGameManager.Instance?.HandlePlayerDeathServerRpc(OwnerClientId);
-    }
-
-    //Este método es necesario para CanvasManager
-    public float GetCurrentHealth()
-    {
-        return currentHealth;
-    }
+    public float GetCurrentHealth() => currentHealth;
 }
-

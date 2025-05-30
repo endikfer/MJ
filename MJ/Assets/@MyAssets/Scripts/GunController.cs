@@ -5,19 +5,16 @@ using System.Collections;
 
 public class GunController : NetworkBehaviour
 {
-    [Header("Configuración Básica")]
     public Transform bulletSpawnPoint;
     public GameObject bulletPrefab;
     public float bulletSpeed = 20f;
     public float fireRate = 0.5f;
 
-    [Header("Efectos Visuales")]
     public Light muzzleFlashLight;
     public float flashDuration = 0.07f;
     public float maxLightIntensity = 5f;
     public ParticleSystem muzzleFlashParticles;
 
-    [Header("Efectos de Audio")]
     public AudioSource gunAudio;
     [Range(0, 1)] public float volume = 0.8f;
 
@@ -51,36 +48,42 @@ public class GunController : NetworkBehaviour
 
     private void OnTriggerPulled(ActivateEventArgs arg)
     {
-        if (!IsOwner) return;
-        TryShoot();
-    }
+        if (Time.time < nextFireTime) return;
 
-    private void TryShoot()
-    {
-        if (Time.time >= nextFireTime && bulletSpawnPoint != null)
+        Collider shooterCollider = GetComponentInParent<Collider>();
+        NetworkObject shooterNetObj = shooterCollider?.GetComponent<NetworkObject>();
+
+        if (shooterNetObj != null)
         {
-            FireBulletServerRpc(
+            RequestFireServerRpc(
                 bulletSpawnPoint.position,
                 bulletSpawnPoint.forward,
-                bulletSpawnPoint.rotation
+                bulletSpawnPoint.rotation,
+                shooterNetObj.NetworkObjectId
             );
             nextFireTime = Time.time + fireRate;
         }
     }
 
-    [ServerRpc]
-    private void FireBulletServerRpc(Vector3 position, Vector3 direction, Quaternion rotation)
+    [ServerRpc(RequireOwnership = false)]
+    private void RequestFireServerRpc(Vector3 pos, Vector3 dir, Quaternion rot, ulong shooterColliderId, ServerRpcParams rpcParams = default)
     {
-        if (!IsSpawned || bulletPrefab == null) return;
-
-        GameObject bullet = Instantiate(bulletPrefab, position, rotation);
+        GameObject bullet = Instantiate(bulletPrefab, pos, rot);
         var netObj = bullet.GetComponent<NetworkObject>();
-        netObj.SpawnWithOwnership(OwnerClientId);
+        netObj.Spawn(true);
 
-        Rigidbody rb = bullet.GetComponent<Rigidbody>();
-        if (rb != null)
+        if (bullet.TryGetComponent(out BulletController bulletCtrl))
         {
-            rb.velocity = direction * bulletSpeed;
+            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(shooterColliderId, out NetworkObject shooterObj))
+            {
+                Collider col = shooterObj.GetComponent<Collider>();
+                bulletCtrl.SetShooter(rpcParams.Receive.SenderClientId, col);
+            }
+        }
+
+        if (bullet.TryGetComponent<Rigidbody>(out var rb))
+        {
+            rb.velocity = dir * bulletSpeed;
         }
 
         PlayShootEffectsClientRpc();
@@ -94,8 +97,7 @@ public class GunController : NetworkBehaviour
 
     private IEnumerator HandleShootEffects()
     {
-        if (gunAudio != null && gunAudio.clip != null)
-            gunAudio.PlayOneShot(gunAudio.clip, volume);
+        gunAudio?.PlayOneShot(gunAudio.clip, volume);
 
         if (muzzleFlashLight != null)
         {
@@ -104,26 +106,13 @@ public class GunController : NetworkBehaviour
             flashTimer = flashDuration;
         }
 
-        if (muzzleFlashParticles != null)
-        {
-            muzzleFlashParticles.Stop();
-            muzzleFlashParticles.Play();
-        }
+        muzzleFlashParticles?.Play();
 
-        float elapsed = 0f;
-        while (elapsed < flashDuration)
-        {
-            if (muzzleFlashLight != null)
-            {
-                muzzleFlashLight.intensity = Mathf.Lerp(maxLightIntensity, 0, elapsed / flashDuration);
-            }
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
+        yield return new WaitForSeconds(flashDuration);
 
         if (muzzleFlashLight != null)
         {
             muzzleFlashLight.enabled = false;
         }
     }
-}
+}   

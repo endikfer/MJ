@@ -5,7 +5,8 @@ using System.Collections;
 
 public class GunSpawner : NetworkBehaviour
 {
-    public GameObject gunPrefab;
+    public GameObject gunPrefab1;
+    public GameObject gunPrefab2;
 
     public override void OnNetworkSpawn()
     {
@@ -23,7 +24,10 @@ public class GunSpawner : NetworkBehaviour
 
     private void SpawnGun()
     {
-        GameObject gun = Instantiate(gunPrefab, new Vector3(0, 1, 0), Quaternion.identity);
-        gun.GetComponent<NetworkObject>().Spawn();
+        GameObject gun1 = Instantiate(gunPrefab1, new Vector3(1.86f, 1.51f, -6.96f), Quaternion.identity);
+        GameObject gun2 = Instantiate(gunPrefab2, new Vector3(-1.795f, 1.528f, 6.981f), Quaternion.identity);
+        gun1.GetComponent<NetworkObject>().Spawn();
+        gun2.GetComponent<NetworkObject>().Spawn();
+
     }
 }

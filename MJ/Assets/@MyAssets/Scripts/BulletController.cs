@@ -1,13 +1,21 @@
 using UnityEngine;
 using Unity.Netcode;
-using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 
-[RequireComponent(typeof(Rigidbody), typeof(ClientNetworkTransform))]
+[RequireComponent(typeof(Rigidbody), typeof(Collider))]
 public class BulletController : NetworkBehaviour
 {
     public float speed = 30f;
     public float lifetime = 3f;
     private Rigidbody rb;
+    private bool velocityApplied = false;
+    private ulong shooterId;
+    public Collider shooterCollider;
+
+    public void SetShooter(ulong shooterId, Collider shooterCol)
+    {
+        this.shooterId = shooterId;
+        this.shooterCollider = shooterCol;
+    }
 
     private void Awake()
     {
@@ -18,7 +26,13 @@ public class BulletController : NetworkBehaviour
     {
         if (IsServer)
         {
+            if (shooterCollider != null && TryGetComponent<Collider>(out var bulletCollider))
+            {
+                Physics.IgnoreCollision(bulletCollider, shooterCollider);
+            }
+
             rb.velocity = transform.forward * speed;
+            velocityApplied = true;
             Invoke(nameof(DestroyBullet), lifetime);
         }
         else
@@ -32,12 +46,14 @@ public class BulletController : NetworkBehaviour
     {
         if (!IsServer) return;
 
+        NetworkObject targetObj = other.GetComponent<NetworkObject>();
+        if (targetObj != null && targetObj.OwnerClientId == shooterId) return;
+
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            PlayerLife playerLife = other.GetComponentInParent<PlayerLife>();
+            var playerLife = other.GetComponent<PlayerLife>();
             if (playerLife != null)
             {
-                Debug.Log($"[SERVER] Bullet hit player {playerLife.OwnerClientId}");
                 playerLife.TakeDamage(10f);
             }
         }
@@ -49,7 +65,7 @@ public class BulletController : NetworkBehaviour
     {
         if (IsServer && IsSpawned)
         {
-            NetworkObject.Despawn();
+            NetworkObject.Despawn(true);
             Destroy(gameObject);
         }
     }
