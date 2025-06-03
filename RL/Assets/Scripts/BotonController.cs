@@ -5,7 +5,7 @@ using UnityEngine;
 public class BotonController : MonoBehaviour
 {
     public Door door;
-    public GameObject puerta;
+    //public GameObject puerta;
 
     void OnTriggerEnter(Collider other)
     {
@@ -13,12 +13,12 @@ public class BotonController : MonoBehaviour
             if (door.open == false)
             {
                 door.OpenDoor();
-                puerta.GetComponent<Collider>().isTrigger = true;
+                //puerta.GetComponent<Collider>().isTrigger = true;
             }
             else
             {
                 door.CloseDoor();
-                puerta.GetComponent<Collider>().isTrigger = false;
+                //puerta.GetComponent<Collider>().isTrigger = false;
             }
         }
     }

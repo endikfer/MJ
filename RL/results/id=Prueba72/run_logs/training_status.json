@@ -1,0 +1,83 @@
+{
+    "Player": {
+        "checkpoints": [
+            {
+                "steps": 499951,
+                "file_path": "results\\id=Prueba72\\Player\\Player-499951.onnx",
+                "reward": 72.58941563415527,
+                "creation_time": 1748537189.4743245,
+                "auxillary_file_paths": [
+                    "results\\id=Prueba72\\Player\\Player-499951.pt"
+                ]
+            },
+            {
+                "steps": 999981,
+                "file_path": "results\\id=Prueba72\\Player\\Player-999981.onnx",
+                "reward": 81.74544164185883,
+                "creation_time": 1748539172.3619118,
+                "auxillary_file_paths": [
+                    "results\\id=Prueba72\\Player\\Player-999981.pt"
+                ]
+            },
+            {
+                "steps": 1499973,
+                "file_path": "results\\id=Prueba72\\Player\\Player-1499973.onnx",
+                "reward": 197.80913253452468,
+                "creation_time": 1748541914.677117,
+                "auxillary_file_paths": [
+                    "results\\id=Prueba72\\Player\\Player-1499973.pt"
+                ]
+            },
+            {
+                "steps": 1999981,
+                "file_path": "results\\id=Prueba72\\Player\\Player-1999981.onnx",
+                "reward": 122.14682554429577,
+                "creation_time": 1748544493.1918974,
+                "auxillary_file_paths": [
+                    "results\\id=Prueba72\\Player\\Player-1999981.pt"
+                ]
+            },
+            {
+                "steps": 2499983,
+                "file_path": "results\\id=Prueba72\\Player\\Player-2499983.onnx",
+                "reward": 105.4297927423572,
+                "creation_time": 1748546672.7362857,
+                "auxillary_file_paths": [
+                    "results\\id=Prueba72\\Player\\Player-2499983.pt"
+                ]
+            },
+            {
+                "steps": 2999981,
+                "file_path": "results\\id=Prueba72\\Player\\Player-2999981.onnx",
+                "reward": 91.29842807307388,
+                "creation_time": 1748548636.2696304,
+                "auxillary_file_paths": [
+                    "results\\id=Prueba72\\Player\\Player-2999981.pt"
+                ]
+            },
+            {
+                "steps": 3484173,
+                "file_path": "results\\id=Prueba72\\Player\\Player-3484173.onnx",
+                "reward": 96.31101489067078,
+                "creation_time": 1748550259.7431028,
+                "auxillary_file_paths": [
+                    "results\\id=Prueba72\\Player\\Player-3484173.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 3484173,
+            "file_path": "results\\id=Prueba72\\Player.onnx",
+            "reward": 96.31101489067078,
+            "creation_time": 1748550259.7431028,
+            "auxillary_file_paths": [
+                "results\\id=Prueba72\\Player\\Player-3484173.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.7.0+cpu"
+    }
+}

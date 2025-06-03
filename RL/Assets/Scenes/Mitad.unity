@@ -330,20 +330,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 6154102850607141955, guid: f8b1a2e0ac6d2d44cb2e8096d9132ef0, type: 3}
+      propertyPath: MaxStep
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 6154102850607141955, guid: f8b1a2e0ac6d2d44cb2e8096d9132ef0, type: 3}
       propertyPath: camaraController
       value: 
       objectReference: {fileID: 452852965}
+    - target: {fileID: 6154102850607141955, guid: f8b1a2e0ac6d2d44cb2e8096d9132ef0, type: 3}
+      propertyPath: successesRequired
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6699246733210986061, guid: f8b1a2e0ac6d2d44cb2e8096d9132ef0, type: 3}
       propertyPath: m_Model
       value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 6699246733210986061, guid: f8b1a2e0ac6d2d44cb2e8096d9132ef0, type: 3}
-      propertyPath: m_BehaviorType
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6699246733210986061, guid: f8b1a2e0ac6d2d44cb2e8096d9132ef0, type: 3}
-      propertyPath: m_BrainParameters.VectorObservationSize
-      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 7135904569052140490, guid: f8b1a2e0ac6d2d44cb2e8096d9132ef0, type: 3}
       propertyPath: m_LocalPosition.x

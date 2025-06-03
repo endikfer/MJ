@@ -329,6 +329,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4359323750172057405, guid: e2ee222e1f8bc2944b0cff969322aeb4, type: 3}
+      propertyPath: m_Size.x
+      value: 0.9858174
+      objectReference: {fileID: 0}
+    - target: {fileID: 4359323750172057405, guid: e2ee222e1f8bc2944b0cff969322aeb4, type: 3}
+      propertyPath: m_Size.z
+      value: 0.98014295
+      objectReference: {fileID: 0}
+    - target: {fileID: 4359323750172057405, guid: e2ee222e1f8bc2944b0cff969322aeb4, type: 3}
+      propertyPath: m_Center.x
+      value: 0.000072270625
+      objectReference: {fileID: 0}
+    - target: {fileID: 4359323750172057405, guid: e2ee222e1f8bc2944b0cff969322aeb4, type: 3}
+      propertyPath: m_Center.z
+      value: -0.0009152292
+      objectReference: {fileID: 0}
     - target: {fileID: 4555325794559379747, guid: e2ee222e1f8bc2944b0cff969322aeb4, type: 3}
       propertyPath: camaraController
       value: 
@@ -336,10 +352,22 @@ PrefabInstance:
     - target: {fileID: 5267197606492523902, guid: e2ee222e1f8bc2944b0cff969322aeb4, type: 3}
       propertyPath: m_Model
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 5022602860645237092, guid: c69c0683e7889844e919cd8309b6cd76, type: 3}
     - target: {fileID: 7421374466877447184, guid: e2ee222e1f8bc2944b0cff969322aeb4, type: 3}
       propertyPath: m_Name
       value: Entorno2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7596392261475999432, guid: e2ee222e1f8bc2944b0cff969322aeb4, type: 3}
+      propertyPath: m_Size.z
+      value: 0.77410793
+      objectReference: {fileID: 0}
+    - target: {fileID: 7596392261475999432, guid: e2ee222e1f8bc2944b0cff969322aeb4, type: 3}
+      propertyPath: m_Center.z
+      value: 0.985826
+      objectReference: {fileID: 0}
+    - target: {fileID: 7596392261475999432, guid: e2ee222e1f8bc2944b0cff969322aeb4, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8567968951454824697, guid: e2ee222e1f8bc2944b0cff969322aeb4, type: 3}
       propertyPath: m_LocalPosition.x
@@ -379,6 +407,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8567968951454824697, guid: e2ee222e1f8bc2944b0cff969322aeb4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8715715287034903717, guid: e2ee222e1f8bc2944b0cff969322aeb4, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

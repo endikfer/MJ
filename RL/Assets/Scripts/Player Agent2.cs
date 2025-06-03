@@ -163,11 +163,6 @@ public class PlayerAgent2 : Agent
                 if (doorCol != null) doorCol.isTrigger = true;
             }
 
-            if (door.name == "Puerta" && door.GetComponent<Collider>().isTrigger == true)
-            {
-                door.GetComponent<Collider>().isTrigger = false;
-            }
-
             if (door.name == "Door_3_Yellow" && door.GetComponentInChildren<Door>().open == true)
             {
                 door.GetComponentInChildren<Door>().open = false;
@@ -260,7 +255,7 @@ public class PlayerAgent2 : Agent
 
             if (currentLevel > 1)
             {
-                if (currentDoorIndex == 1)
+                if (currentDoorIndex == 1 && levelTargets[0] == other.gameObject.transform)
                 {
                     other.GetComponent<Collider>().isTrigger = false;
                 }

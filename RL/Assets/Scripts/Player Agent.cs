@@ -10,8 +10,6 @@ public class PlayerAgent : Agent
 {
     public bool useVectorObs;
 
-    private bool canJump = false;
-
     private bool hasArrive = false;
     private bool hasToArrive = false;
 
@@ -45,6 +43,8 @@ public class PlayerAgent : Agent
 
     private int currentDoorIndex = 0;
 
+    private float previousDistanceToGoal;
+
     public override void CollectObservations(VectorSensor sensor)
     {
         if (useVectorObs)
@@ -54,9 +54,9 @@ public class PlayerAgent : Agent
 
         sensor.AddObservation(transform.position);
         sensor.AddObservation(boton1.transform.position);
-        sensor.AddObservation(boton2.transform.position);
-        sensor.AddObservation(boton3.transform.position);
-        sensor.AddObservation(boton4.transform.position);
+        sensor.AddObservation(boton2.transform.position - transform.position);
+        sensor.AddObservation(boton3.transform.position - transform.position);
+        sensor.AddObservation(boton4.transform.position - transform.position);
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
@@ -71,7 +71,6 @@ public class PlayerAgent : Agent
 
         var actionMove = actionBuffers.DiscreteActions[0];
         var actionRotate = actionBuffers.DiscreteActions[1];
-        var actionJump = actionBuffers.DiscreteActions[2];
         
 
         switch (actionMove)
@@ -94,20 +93,10 @@ public class PlayerAgent : Agent
                 break;
         }
 
-        switch (actionJump)
-        {
-            case 1:
-                if (canJump)
-                {
-                    rb = GetComponent<Rigidbody>();
-                    rb.AddForce(Vector3.up * 80f, ForceMode.Impulse);
-                }
-                break;
-        }
         Vector3 targetPosition = rb.position + dirToGo * Time.deltaTime;
         rb.MovePosition(targetPosition);
 
-        PenalizeByDistanceToGoal();
+        RewardForApproachingGoal();
 
     }
 
@@ -129,10 +118,6 @@ public class PlayerAgent : Agent
         else if (Input.GetKey(KeyCode.D))
         {
             discreteActionsOut[1] = 2;
-        }
-        if (Input.GetKey(KeyCode.Space))
-        {
-            discreteActionsOut[2] = 1;
         }
     }
 
@@ -180,22 +165,20 @@ public class PlayerAgent : Agent
             if (door.name == "puerta")
             {
                 Collider doorCol = door.GetComponent<Collider>();
-                if (doorCol != null)
-                {
-                    doorCol.isTrigger = true;
-                }
+                if (doorCol != null) doorCol.isTrigger = true;
             }
 
-            if(door.name == "Puerta" && door.GetComponent<Collider>().isTrigger == true)
-            {
-                door.GetComponent<Collider>().isTrigger = false;
-                
-            }
             if(door.name == "Door_3_Yellow" && door.GetComponentInChildren<Door>().open == true)
             {
                 door.GetComponentInChildren<Door>().open = false;
                 door.GetComponentInChildren<Door>().CloseDoor();
             }
+        }
+
+
+        if (levelTargets.Length >= currentLevel)
+        {
+            previousDistanceToGoal = Vector3.Distance(destino.position, transform.position);
         }
     }
 
@@ -243,6 +226,18 @@ public class PlayerAgent : Agent
         EndEpisode();
     }
 
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Puerta"))
+        {
+            if (currentDoorIndex == 3)
+            {
+                int puerta = currentDoorIndex + 1;
+                Debug.Log("Puerta " + puerta + " atravesada.");
+            }
+        }
+    }
+
     public void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Puerta"))
@@ -261,9 +256,29 @@ public class PlayerAgent : Agent
             {
                 currentDoorIndex++;
 
+                if (currentDoorIndex == 0)
+                {
+                    int puerta = currentDoorIndex;
+                    Debug.Log("Puerta " + puerta + " atravesada.");
+                }
+                else if (currentDoorIndex == 1)
+                {
+                    int puerta = currentDoorIndex;
+                    Debug.Log("Puerta " + puerta + " atravesada.");
+                }
+                else if (currentDoorIndex == 2)
+                {
+                    int puerta = currentDoorIndex;
+                    Debug.Log("Puerta " + puerta + " atravesada.");
+                }
+                else if (currentDoorIndex == 3)
+                {
+                    int puerta = currentDoorIndex;
+                    Debug.Log("Puerta " + puerta + " atravesada.");
+                }
+
                 if (currentDoorIndex < doorsPerLevel)
                 {
-                    // Cambiar cámara a la siguiente posición
                     int camIndex = Mathf.Min(currentDoorIndex, newCameraPositions.Length - 1);
                     if (camaraController != null)
                     {
@@ -272,25 +287,7 @@ public class PlayerAgent : Agent
                 }
                 else
                 {
-                    // Última puerta -> éxito
-                    RegisterSuccess();
-                }
-
-
-
-
-
-                if (currentDoorIndex == 3)
-                {
-                    Debug.Log("Puerta 3 atravesada.");
-                }
-                else if (currentDoorIndex == 4)
-                {
-                    Debug.Log("Puerta 4 atravesada.");
-                }
-                else if (currentDoorIndex == 2)
-                {
-                    Debug.Log("Puerta 2 atravesada.");
+                    RegisterSuccess(); // Última puerta
                 }
             }
 
@@ -298,8 +295,7 @@ public class PlayerAgent : Agent
             // Solo cerrar puertas si ya avanzó al menos al nivel 2
             if (currentLevel > 1)
             {
-                // Solo cerramos la puerta si corresponde al nivel anterior
-                if (currentDoorIndex == 1)
+                if (currentDoorIndex == 1 && levelTargets[0] == other.gameObject.transform)
                 {
                     other.GetComponent<Collider>().isTrigger = false;
                 }
@@ -318,7 +314,7 @@ public class PlayerAgent : Agent
             if (button1 == false)
             {
                 button1 = true;
-                AddReward(20.0f);
+                AddReward(100.0f);
                 Debug.Log("Boton 1 pulsado.");
             }
         }
@@ -329,7 +325,7 @@ public class PlayerAgent : Agent
             if (button2 == false)
             {
                 button2 = true;
-                AddReward(20.0f);
+                AddReward(100.0f);
                 Debug.Log("Boton 2 pulsado.");
             }
         }
@@ -340,44 +336,29 @@ public class PlayerAgent : Agent
             if (button3 == false)
             {
                 button3 = true;
-                AddReward(20.0f);
+                AddReward(100.0f);
                 Debug.Log("Boton 3 pulsado.");
             }
             else if (button4 == false)
             {
                 button4 = true;
-                AddReward(20.0f);
+                AddReward(100.0f);
                 Debug.Log("Boton 4 pulsado.");
             }
         }
     }
 
-    void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Jump"))
-        {
-            canJump = true;
-        }
-        
-    }
-
-    void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Jump"))
-        {
-            canJump = false;
-        }
-    }
-
-    private void PenalizeByDistanceToGoal()
+    private void RewardForApproachingGoal()
     {
         if (levelTargets.Length >= currentLevel)
         {
-            float distance = Vector3.Distance(transform.position, destino.position);
-            float maxExpectedDistance = 45.68f;
-            float normalizedPenalty = Mathf.Clamp01(distance / maxExpectedDistance);
-
-            AddReward(-normalizedPenalty * 0.5f);
+            float currentDistance = Vector3.Distance(destino.position, transform.position);
+            if (currentDistance < previousDistanceToGoal)
+            {
+                float improvement = previousDistanceToGoal - currentDistance;
+                AddReward(improvement * 10f); // Puedes ajustar el multiplicador si lo deseas
+                previousDistanceToGoal = currentDistance;
+            }
         }
     }
 }

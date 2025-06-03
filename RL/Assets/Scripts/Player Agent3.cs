@@ -10,7 +10,6 @@ public class PlayerAgent3 : Agent
 {
     public bool useVectorObs;
 
-    private bool canJump = false;
     private bool hasArrive = false;
     private bool hasToArrive = false;
 
@@ -39,6 +38,12 @@ public class PlayerAgent3 : Agent
 
     private int currentDoorIndex = 0;
 
+
+
+    private float previousDistanceToGoal;
+
+
+
     public override void CollectObservations(VectorSensor sensor)
     {
         if (useVectorObs)
@@ -49,6 +54,7 @@ public class PlayerAgent3 : Agent
         sensor.AddObservation(transform.position);
         sensor.AddObservation(boton1.transform.position);
         sensor.AddObservation(boton2.transform.position - transform.position);
+        //sensor.AddObservation(destino.position - transform.position);
         sensor.AddObservation(Vector3.zero);
         sensor.AddObservation(Vector3.zero);
     }
@@ -65,7 +71,6 @@ public class PlayerAgent3 : Agent
 
         var actionMove = actionBuffers.DiscreteActions[0];
         var actionRotate = actionBuffers.DiscreteActions[1];
-        var actionJump = actionBuffers.DiscreteActions[2];
 
         switch (actionMove)
         {
@@ -87,21 +92,10 @@ public class PlayerAgent3 : Agent
                 break;
         }
 
-        switch (actionJump)
-        {
-            case 1:
-                if (canJump)
-                {
-                    rb = GetComponent<Rigidbody>();
-                    rb.AddForce(Vector3.up * 80f, ForceMode.Impulse);
-                }
-                break;
-        }
-
         Vector3 targetPosition = rb.position + dirToGo * Time.deltaTime;
         rb.MovePosition(targetPosition);
 
-        PenalizeByDistanceToGoal();
+        RewardForApproachingGoal();
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -122,10 +116,6 @@ public class PlayerAgent3 : Agent
         else if (Input.GetKey(KeyCode.D))
         {
             discreteActionsOut[1] = 2;
-        }
-        if (Input.GetKey(KeyCode.Space))
-        {
-            discreteActionsOut[2] = 1;
         }
     }
 
@@ -168,17 +158,21 @@ public class PlayerAgent3 : Agent
                 if (doorCol != null) doorCol.isTrigger = true;
             }
 
-            if (door.name == "Puerta" && door.GetComponent<Collider>().isTrigger == true)
-            {
-                door.GetComponent<Collider>().isTrigger = false;
-            }
-
             if (door.name == "Door_3_Yellow" && door.GetComponentInChildren<Door>().open == true)
             {
                 door.GetComponentInChildren<Door>().open = false;
                 door.GetComponentInChildren<Door>().CloseDoor();
             }
         }
+
+
+
+        if (levelTargets.Length >= currentLevel)
+        {
+            previousDistanceToGoal = Vector3.Distance(destino.position, transform.position);
+        }
+
+
     }
 
     public void RegisterSuccess()
@@ -224,17 +218,7 @@ public class PlayerAgent3 : Agent
     {
         if (other.CompareTag("Puerta"))
         {
-            if (currentDoorIndex == 0)
-            {
-                int puerta = currentDoorIndex + 1;
-                Debug.Log("Puerta " + puerta + " atravesada.");
-            }
-            else if (currentDoorIndex == 1)
-            {
-                int puerta = currentDoorIndex + 1;
-                Debug.Log("Puerta " + puerta + " atravesada.");
-            }
-            else if (currentDoorIndex == 2)
+            if (currentDoorIndex == 2)
             {
                 int puerta = currentDoorIndex + 1;
                 Debug.Log("Puerta " + puerta + " atravesada.");
@@ -257,6 +241,21 @@ public class PlayerAgent3 : Agent
             {
                 currentDoorIndex++;
 
+                if (currentDoorIndex == 0)
+                {
+                    int puerta = currentDoorIndex;
+                    Debug.Log("Puerta " + puerta + " atravesada.");
+                }
+                else if (currentDoorIndex == 1)
+                {
+                    int puerta = currentDoorIndex;
+                    Debug.Log("Puerta " + puerta + " atravesada.");
+                }else if (currentDoorIndex == 2)
+                {
+                    int puerta = currentDoorIndex;
+                    Debug.Log("Puerta " + puerta + " atravesada.");
+                }
+
                 if (currentDoorIndex < doorsPerLevel)
                 {
                     int camIndex = Mathf.Min(currentDoorIndex, newCameraPositions.Length - 1);
@@ -273,7 +272,7 @@ public class PlayerAgent3 : Agent
 
             if (currentLevel > 1)
             {
-                if (currentDoorIndex == 1)
+                if (currentDoorIndex == 1 && levelTargets[0] == other.gameObject.transform)
                 {
                     other.GetComponent<Collider>().isTrigger = false;
                 }
@@ -308,30 +307,17 @@ public class PlayerAgent3 : Agent
         }
     }
 
-    void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Jump"))
-        {
-            canJump = true;
-        }
-    }
-
-    void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Jump"))
-        {
-            canJump = false;
-        }
-    }
-
-    private void PenalizeByDistanceToGoal()
+    private void RewardForApproachingGoal()
     {
         if (levelTargets.Length >= currentLevel)
         {
-            float distance = Vector3.Distance(transform.position, destino.position);
-            float maxExpectedDistance = 33.47f;
-            float normalizedPenalty = Mathf.Clamp01(distance / maxExpectedDistance);
-            AddReward(-normalizedPenalty * 0.5f);
+            float currentDistance = Vector3.Distance(destino.position, transform.position);
+            if (currentDistance < previousDistanceToGoal)
+            {
+                float improvement = previousDistanceToGoal - currentDistance;
+                AddReward(improvement * 10f); // Puedes ajustar el multiplicador si lo deseas
+                previousDistanceToGoal = currentDistance;
+            }
         }
     }
 }
